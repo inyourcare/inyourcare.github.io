@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://inyourcare.github.io/</loc>
+    <lastmod>2026-10-28</lastmod>
+  </url>
+  <url>
+    <loc>https://inyourcare.github.io/musictools/</loc>
+    <lastmod>2026-10-28</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://inyourcare.github.io/musictools/"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://inyourcare.github.io/musictools/ko/"/>
+  </url>
+  <url>
+    <loc>https://inyourcare.github.io/musictools/ko/</loc>
+    <lastmod>2026-10-28</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://inyourcare.github.io/musictools/"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://inyourcare.github.io/musictools/ko/"/>
+  </url>
+</urlset>

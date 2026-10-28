@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://inyourcare.github.io/sitemap.xml

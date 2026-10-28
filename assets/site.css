@@ -1,0 +1,135 @@
+/* InYourCare's website: the app's graphite and brass, with the warm paper of a printed score
+   for the sections that show sheet music. One stylesheet for every page. */
+:root {
+  --bg: #0e0f11;
+  --surface: #16181b;
+  --surface-2: #1e2125;
+  --line: #2b2f35;
+  --text: #e6e2da;
+  --muted: #a19d96;
+  --faint: #7f7b75;
+  --brass: #d9a25b;
+  --brass-fill: #c38c47;
+  --paper: #f5f0e7;
+  --paper-line: #e2d6c3;
+  --ink: #1c1a16;
+  --ink-muted: #5c554b;
+  --copper: #9a5d22;
+  --radius: 22px;
+  --font: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 400 17px/1.65 var(--font);
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  -webkit-font-smoothing: antialiased;
+}
+img, video { max-width: 100%; height: auto; display: block; }
+a { color: var(--brass); }
+:focus-visible { outline: 2px solid var(--brass); outline-offset: 3px; }
+h1, h2, h3 { text-wrap: balance; margin: 0; letter-spacing: -0.03em; }
+p { margin: 0; }
+
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 20px; }
+
+/* Top bar */
+.top { position: sticky; top: 0; z-index: 10; background: rgba(14, 15, 17, 0.88); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; gap: 12px; }
+.brand { display: flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; font-weight: 800; font-size: 19px; letter-spacing: -0.02em; }
+.brand img { width: 32px; height: 32px; border-radius: 8px; }
+.lang { display: flex; gap: 4px; font-size: 14px; font-weight: 600; }
+.lang a { color: var(--muted); text-decoration: none; padding: 5px 10px; border-radius: 999px; border: 1px solid transparent; }
+.lang a[aria-current="page"] { color: var(--text); border-color: var(--line); background: var(--surface); }
+
+/* Hero */
+.hero { padding-block: 56px 40px; background: radial-gradient(1000px 520px at 30% -10%, rgba(217, 162, 91, 0.13), transparent 70%); }
+.hero-grid { display: grid; gap: 40px; grid-template-columns: minmax(0, 1fr); align-items: center; }
+@media (min-width: 900px) { .hero-grid { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); } }
+.eyebrow { display: inline-block; font-size: 14px; font-weight: 700; color: var(--brass); border: 1px solid rgba(217, 162, 91, 0.55); border-radius: 999px; padding: 4px 14px; }
+.hero h1 { font-size: clamp(38px, 6vw, 60px); line-height: 1.12; font-weight: 800; margin-top: 18px; }
+.hero h1 em, h2 em { font-style: normal; color: var(--brass); }
+.hero .lead { font-size: 19px; color: var(--muted); margin-top: 18px; max-width: 34em; }
+.get { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px; margin-top: 28px; }
+.badge img { height: 54px; width: auto; }
+.keep { font-size: 15px; color: var(--muted); max-width: 22em; }
+.keep b { color: var(--text); }
+.tablet { border-radius: 24px; padding: 10px; background: #050506; box-shadow: 0 0 0 1px var(--line), 0 30px 80px rgba(0, 0, 0, 0.55); }
+.tablet img { border-radius: 16px; width: 100%; }
+
+/* Sections */
+.section { padding-block: 72px; }
+.section.paper { background: var(--paper); color: var(--ink); }
+.section h2 { font-size: clamp(30px, 4.4vw, 44px); line-height: 1.18; font-weight: 800; }
+.paper h2 em { color: var(--copper); }
+.kicker { font-size: 14px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--brass); margin-bottom: 12px; }
+.paper .kicker { color: var(--copper); }
+.body { font-size: 18px; color: var(--muted); margin-top: 16px; max-width: 36em; }
+.paper .body { color: var(--ink-muted); }
+.body + .body { margin-top: 12px; }
+.feature { display: grid; gap: 36px; grid-template-columns: minmax(0, 1fr); align-items: center; }
+@media (min-width: 880px) {
+  .feature { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 56px; }
+  .feature.flip > .shots { order: -1; }
+}
+.shots { display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; }
+@media (min-width: 640px) { .shots { gap: 18px; } }
+.phone { width: min(232px, 38vw); border-radius: 36px; padding: 8px; background: #050506; box-shadow: 0 0 0 1px #3a3d42, 0 24px 60px rgba(0, 0, 0, 0.4); }
+.phone img, .phone video { border-radius: 29px; width: 100%; }
+.print { width: min(232px, 38vw); background: #fff; padding: 9px 9px 30px; transform: rotate(-3deg); box-shadow: 0 22px 50px rgba(60, 40, 10, 0.3); }
+.print span { display: block; text-align: center; font-size: 13px; font-weight: 700; color: var(--ink-muted); margin-top: 8px; }
+.arrow { color: var(--copper); font-weight: 800; font-size: 24px; }
+.shots .phone:only-child { width: min(280px, 64vw); }
+.ticks { list-style: none; padding: 0; margin: 22px 0 0; display: grid; gap: 10px; }
+.ticks li { position: relative; padding-left: 28px; font-size: 17px; }
+.ticks li::before { content: ''; position: absolute; left: 4px; top: 0.55em; width: 10px; height: 10px; border-radius: 50%; background: var(--brass-fill); }
+.paper .ticks li::before { background: var(--copper); }
+
+/* Video + what's new */
+.intro { display: grid; gap: 36px; grid-template-columns: minmax(0, 1fr); align-items: center; }
+@media (min-width: 880px) { .intro { grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 64px; } }
+.short { width: min(300px, 80vw); margin-inline: auto; border-radius: 26px; overflow: hidden; box-shadow: 0 0 0 1px var(--line), 0 24px 60px rgba(0, 0, 0, 0.5); }
+.short video { width: 100%; background: #000; }
+
+/* Grid of smaller features */
+.more { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); margin-top: 36px; }
+@media (min-width: 640px) { .more { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 980px) { .more { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.more div { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 22px; }
+.more h3 { font-size: 19px; font-weight: 800; }
+.more p { color: var(--muted); font-size: 15.5px; margin-top: 6px; line-height: 1.55; }
+
+/* FAQ */
+.faq { margin-top: 28px; display: grid; gap: 12px; max-width: 820px; }
+.faq details { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 4px 20px; }
+.faq summary { cursor: pointer; font-weight: 700; font-size: 17.5px; padding: 14px 0; list-style-position: outside; }
+.faq details p { color: var(--muted); padding-bottom: 16px; font-size: 16.5px; }
+
+/* Closing call */
+.cta { text-align: center; padding-block: 80px; background: radial-gradient(800px 420px at 50% 0%, rgba(217, 162, 91, 0.12), transparent 70%); }
+.cta img.icon { width: 112px; height: 112px; border-radius: 26px; margin: 0 auto; box-shadow: 0 18px 50px rgba(217, 162, 91, 0.22); }
+.cta h2 { font-size: clamp(30px, 4.6vw, 44px); margin-top: 26px; font-weight: 800; }
+.cta .keep { margin: 14px auto 0; text-align: center; }
+.cta .get { justify-content: center; }
+
+footer { border-top: 1px solid var(--line); padding-block: 32px 48px; color: var(--faint); font-size: 14px; }
+footer .wrap { display: grid; gap: 10px; }
+footer nav { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+footer a { color: var(--muted); }
+
+/* The hub page */
+.apps { display: grid; gap: 18px; margin-top: 32px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 760px) { .apps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.app { display: flex; gap: 18px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; color: var(--text); text-decoration: none; }
+.app:hover { border-color: rgba(217, 162, 91, 0.6); }
+.app img { width: 76px; height: 76px; border-radius: 18px; flex: none; }
+.app h3 { font-size: 21px; font-weight: 800; }
+.app p { color: var(--muted); font-size: 15.5px; margin-top: 4px; }
+
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
