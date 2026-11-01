@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MusicTools Privacy Policy</title>
+<meta name="description" content="What happens to your data in MusicTools: it works entirely on your device, and nothing is collected or sent.">
+<link rel="canonical" href="https://inyourcare.github.io/musictools/privacy/">
+<link rel="icon" href="../../assets/icon-64.png" type="image/png">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+<!-- The URL entered in Play Console and App Store Connect. Keep it in step with
+     docs/release/privacy-policy.md, and publish the site after any change. -->
+<style>
+  :root {
+    --bg: #f7f3e3;
+    --text: #3a2415;
+    --text-soft: #6b5138;
+    --accent: #8f4f21;
+    --accent-2: #b2672e;
+    --panel: #efe8d2;
+    --border: #e2d6b8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #221709;
+      --text: #f3ecdb;
+      --text-soft: #cbb797;
+      --accent: #e0975a;
+      --accent-2: #c97d3f;
+      --panel: #2e2013;
+      --border: #3e2c17;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #221709;
+    --text: #f3ecdb;
+    --text-soft: #cbb797;
+    --accent: #e0975a;
+    --accent-2: #c97d3f;
+    --panel: #2e2013;
+    --border: #3e2c17;
+    color-scheme: dark;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Public Sans", -apple-system, "Malgun Gothic", sans-serif;
+    line-height: 1.65;
+    font-size: 16px;
+  }
+
+  main {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 56px 24px 96px;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 8px;
+  }
+
+  .mark {
+    width: 40px;
+    height: 40px;
+    border-radius: 11px;
+    background: linear-gradient(160deg, var(--accent-2), var(--accent));
+    flex: none;
+    position: relative;
+  }
+  .mark::before,
+  .mark::after {
+    content: "";
+    position: absolute;
+    background: var(--bg);
+  }
+  .mark::before {
+    width: 3px;
+    height: 18px;
+    top: 8px;
+    left: 18.5px;
+    border-radius: 2px;
+    transform: rotate(18deg);
+    transform-origin: bottom center;
+  }
+  .mark::after {
+    width: 22px;
+    height: 12px;
+    bottom: 7px;
+    left: 9px;
+    border-radius: 2px 2px 0 0;
+    clip-path: polygon(20% 0, 80% 0, 100% 100%, 0% 100%);
+  }
+
+  .app-name {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--accent);
+  }
+
+  h1 {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 600;
+    font-size: 2.1rem;
+    text-wrap: balance;
+    margin: 18px 0 4px;
+    letter-spacing: -0.01em;
+  }
+
+  .updated {
+    color: var(--text-soft);
+    font-size: 0.85rem;
+    margin-bottom: 36px;
+  }
+
+  h2 {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--accent);
+    margin-top: 40px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  p, li {
+    max-width: 62ch;
+  }
+
+  ul {
+    padding-left: 22px;
+    margin: 10px 0;
+  }
+  li {
+    margin-bottom: 10px;
+  }
+
+  em { color: var(--text-soft); font-style: normal; }
+  strong { color: var(--text); }
+
+  a {
+    color: var(--accent);
+    text-decoration-color: var(--border);
+  }
+  a:hover { text-decoration-color: var(--accent); }
+
+  .contact {
+    margin-top: 44px;
+    padding: 18px 22px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    font-size: 0.95rem;
+  }
+  .contact a { font-weight: 600; }
+
+  footer {
+    margin-top: 56px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    color: var(--text-soft);
+    font-size: 0.8rem;
+  }
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Public+Sans:wght@400;500;600&display=swap">
+</head>
+<body>
+<main>
+  <header>
+    <div class="mark" aria-hidden="true"></div>
+    <span class="app-name">MusicTools</span>
+  </header>
+
+  <h1>Privacy Policy</h1>
+  <p class="updated">Last updated November 1, 2026</p>
+
+  <p>MusicTools ("the App") is developed by inyourcare ("we", "us"). This policy explains what
+  happens to your data when you use the App.</p>
+
+  <h2>Summary</h2>
+  <p>MusicTools works entirely on your device. We do not collect, store, or transmit any of
+  your personal data, and the App has no servers to send data to.</p>
+
+  <h2>What the App stores, and where</h2>
+  <ul>
+    <li><strong>Sheet music files (PDFs)</strong> you import are copied into the App's private
+      storage folder on your device, together with the practice settings for each song (tempo,
+      time signature, page order and bar counts). When you import a PDF, the App reads its
+      pages on your device to count the bars and find repeat signs, so it can fill in the page
+      order and bar counts for you; nothing is sent anywhere for this. The same goes for a PDF
+      you open in MusicTools from another app.</li>
+    <li><strong>Photos and scans of sheet music.</strong> When you make a sheet from photos or a
+      scan, the App reads the pictures you picked or took on your device — to find the staves and
+      straighten each page by them — and makes them into a PDF in the same private folder. It
+      keeps a copy of each of those pictures (made smaller) beside it, so a page can be made again
+      from it; deleting the song deletes them. It reads only the photos you pick; nothing is sent
+      anywhere.</li>
+    <li><strong>Play-along tracks.</strong> An audio file or recording you add to a song is
+      copied into the song's private folder.</li>
+    <li><strong>Your notes on the sheet music</strong> (pen, highlighter, and text you add in
+      the sheet editor) are saved in the same private folder, along with a copy of the PDF with
+      those notes drawn in, which the App shows during practice. Your original PDF is never
+      modified.</li>
+    <li><strong>Your song library list</strong> (titles, folders, setlists, the songs you opened
+      last) is kept in the App's local storage on your device, using Android/iOS's standard
+      app-storage mechanism.</li>
+    <li><strong>Your recordings</strong> from the Recordings tab are saved as audio files in the
+      App's private storage folder, together with their names, folders, and any melody
+      transcriptions (notes/MIDI) you make from them. Transcription runs entirely on your
+      device. While a recording is being made, the App also keeps a temporary copy of it in the
+      same private folder, so the recording can be restored if the App is closed unexpectedly;
+      the copy is deleted as soon as the recording is saved.</li>
+    <li>None of the above leaves your device unless you choose to share or print it yourself
+      (see below). There is no account system, no cloud sync, and no backend server operated by
+      us or anyone else.</li>
+  </ul>
+
+  <h2>Face gestures</h2>
+  <p>If you turn on <strong>Turn Pages by Face</strong> in Settings, the App uses your device's
+  front camera to turn the page when you wink, move your lips to one side or turn your head. It
+  is off until you turn it on, and off again every time the App starts.</p>
+  <ul>
+    <li><strong>What is read.</strong> While it's on and a sheet is open, each picture from the
+      camera is read on your device into numbers about your face at that moment: how far each eye
+      is closed, where your lips are, which way your head is turned and how far it is from the
+      camera. On iPhone and iPad this is done by Apple's ARKit face tracking; on Android by
+      MediaPipe, software from Google that runs inside the App.</li>
+    <li><strong>What it's for.</strong> Turning the page, and nothing else. It is not used to
+      recognize who you are, and not for advertising, analytics or anything else.</li>
+    <li><strong>Nothing is kept.</strong> No picture is saved, and the numbers are gone a moment
+      after they're read.</li>
+    <li><strong>Nothing is sent.</strong> No picture and no number leaves your device. We, Apple
+      and Google don't receive them, and they aren't shared with anyone.</li>
+    <li><strong>When the camera is on.</strong> Only while the switch is on and a sheet is open in
+      front of you, and the App tells you so when it comes back on, or while the
+      <strong>Adjust Sensitivity</strong> screen is open, where you can see how your gestures read.
+      Leaving either turns the camera off. Locking the screen, leaving the App or five minutes with
+      no face in view turns the switch off too, and it stays off until you turn it on again.</li>
+  </ul>
+
+  <h2>What the App does <em>not</em> do</h2>
+  <ul>
+    <li>No analytics, crash reporting, or advertising SDKs are included. (The MediaPipe library
+      comes with a usage report to Google of its own; it is switched off in the App, so nothing is
+      sent.)</li>
+    <li>No network requests are made by the App during normal use.</li>
+    <li>The camera is used only while you scan pages of sheet music, to take those pictures, and
+      while face gestures are on (see above). No contacts or location data is accessed.</li>
+    <li>The microphone is used only while you are recording in the Recordings tab, and while the
+      tuner is on screen, to hear the note you play; the tuner keeps nothing it hears. A recording
+      you start goes on when you leave the App or lock the screen, until you pause or stop it
+      (or a call or another app takes over the audio), and your device shows that the
+      microphone is in use the whole time: the indicator in the status bar on iOS, a
+      notification on Android. Recordings are never uploaded or analyzed anywhere but on your
+      device.</li>
+    <li>No data is sold or shared with third parties. The App never sends your data anywhere on
+      its own.</li>
+  </ul>
+
+  <h2>Sharing and printing</h2>
+  <p>When you tap <strong>Share PDF</strong> on a song in the Library or the viewer, or
+  <strong>Share</strong> or <strong>Print</strong> in the sheet editor, the App hands a copy of
+  that song's PDF (with your notes, or without them if you choose so) to your device's own share
+  sheet or print dialog. Where it goes from there (an app, a contact, a printer) is your choice, handled by
+  your device and the app or printer you pick. We never receive it. The same goes for
+  <strong>Share Audio</strong> on a recording, <strong>Export MIDI</strong> on a transcription
+  and <strong>Back Up Library</strong>, which makes one file of your sheet music, notes,
+  settings and setlists (and the copies of the photos sheets were made from): the file goes to
+  your device's share sheet, and only where you send it.
+  Restoring a backup reads only the file you pick.</p>
+
+  <h2>Permissions the App requests</h2>
+  <ul>
+    <li><strong>Files/documents access</strong>, only at the moment you choose a PDF, an audio
+      file or a backup. This opens your device's normal file picker, and we only ever read the
+      specific files you select. The App does not request or hold broad access to your device
+      storage.</li>
+    <li><strong>Photos</strong>, only when you choose photos of sheet music: your device's photo
+      picker opens, and the App receives only the photos you select.</li>
+    <li><strong>Camera</strong>, the first time you turn on face gestures or open Adjust
+      Sensitivity and, on iOS, the first time you scan pages. On Android, scanning uses Google's document scanner, which takes the
+      pictures itself and needs no camera permission from the App. You can turn the camera off at
+      any time in your device's settings; everything except face gestures and, on iOS, scanning
+      keeps working.</li>
+    <li><strong>Microphone</strong>, the first time you tap record in the Recordings tab or open
+      the tuner. You can turn it off at any time in your device's settings; everything except
+      recording and the tuner keeps working.</li>
+    <li><strong>Notifications</strong> (Android 13 and later), the first time you record. The
+      notification shows that a recording is being made, or one is playing, while the App isn't
+      on screen, with a button to pause it. Recording and playback work without it.</li>
+  </ul>
+
+  <h2>Uninstalling the App</h2>
+  <p>Uninstalling MusicTools deletes all of its locally stored data (your imported sheet music,
+  your notes on it, song settings, setlists, play-along tracks and your recordings) along with
+  the app, per your device's normal uninstall behavior. We have no copy of it anywhere else, so
+  nothing can be recovered from us after that, except from a backup you made and kept
+  yourself.</p>
+
+  <h2>Children's privacy</h2>
+  <p>The App does not knowingly collect data from anyone, including children, because it does
+  not collect data at all.</p>
+
+  <h2>If you write to us</h2>
+  <p>If you email us, with a question or to join a test of the App, we receive what you send: your
+  email address and your message. We use them only to answer you. If you ask to join a test, we
+  add the Google account address you give us to that test's list in Google Play Console and send
+  you the invitation, and we delete it when the test ends. None of this comes from the App, which
+  sends us nothing.</p>
+
+  <h2>Changes to this policy</h2>
+  <p>If MusicTools later adds features that change this (e.g. cloud backup, an account system),
+  this policy will be updated first, and the date above will change accordingly.</p>
+
+  <div class="contact">
+    Questions about this policy: <a href="mailto:inyourcareallen@gmail.com">inyourcareallen@gmail.com</a>
+  </div>
+
+  <footer><a href="../">MusicTools</a> · <a href="../guide/">How to use</a> · com.inyourcare.musictools</footer>
+</main>
+</body>
+</html>

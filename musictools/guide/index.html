@@ -1,0 +1,1257 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MusicTools Guide</title>
+<meta name="description" content="How to use MusicTools, in Korean and English: bring in sheet music, read it full screen, turn pages by tap, pedal or face gesture, set up a Song Form and let the pages turn themselves.">
+<link rel="canonical" href="https://inyourcare.github.io/musictools/guide/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MusicTools">
+<meta property="og:title" content="MusicTools Guide">
+<meta property="og:description" content="How to use MusicTools: reading, practice, setlists, notes, the metronome and recordings.">
+<meta property="og:url" content="https://inyourcare.github.io/musictools/guide/">
+<meta property="og:image" content="https://inyourcare.github.io/musictools/og-en.png">
+<link rel="icon" href="../../assets/icon-64.png" type="image/png">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+<style>
+  /* Layout: one reading column. Each feature is a real phone screen with numbered pins beside
+     its legend (the viewer also gets a tablet one); the quick start is a four-step sequence marked
+     like rehearsal letters in a score.
+     Dark-first, in the app's own graphite and brass, so the screenshots sit in their own world. */
+  :root {
+    color-scheme: dark;
+    --bg: #0E0F11;
+    --panel: #16181B;
+    --panel-2: #1E2125;
+    --line: #2B2F35;
+    --ink: #E6E2DA;
+    --ink-2: #A19D96;
+    --ink-3: #8C8881;
+    --brass: #D9A25B;
+    --brass-fill: #C38C47;
+    --on-brass: #1B1307;
+    --brass-soft: rgba(217, 162, 91, 0.13);
+    --brass-line: rgba(217, 162, 91, 0.5);
+    --good: #8FBF8A;
+    --bad: #E8766E;
+    --pin-ring: rgba(0, 0, 0, 0.6);
+    --overlay: rgba(20, 22, 25, 0.78);
+    --overlay-ink: #E6E2DA;
+    --shot-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
+    --font-display: "Hahmlet", "Noto Serif KR", "Apple SD Gothic Neo", "Malgun Gothic", serif;
+    --font-body: "IBM Plex Sans KR", -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+    --font-mono: "IBM Plex Mono", "IBM Plex Sans KR", ui-monospace, Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      color-scheme: light;
+      --bg: #F5F5F3;
+      --panel: #FFFFFF;
+      --panel-2: #EDEDEA;
+      --line: #DCDBD6;
+      --ink: #1A1B1E;
+      --ink-2: #55524D;
+      --ink-3: #6B6761;
+      --brass: #8A5A17;
+      --brass-fill: #C38C47;
+      --on-brass: #1B1307;
+      --brass-soft: rgba(138, 90, 23, 0.09);
+      --brass-line: rgba(138, 90, 23, 0.38);
+      --good: #3F7A3B;
+      --bad: #B3413A;
+      --pin-ring: rgba(0, 0, 0, 0.55);
+      --shot-shadow: 0 14px 32px rgba(20, 22, 25, 0.18);
+    }
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --bg: #F5F5F3;
+    --panel: #FFFFFF;
+    --panel-2: #EDEDEA;
+    --line: #DCDBD6;
+    --ink: #1A1B1E;
+    --ink-2: #55524D;
+    --ink-3: #6B6761;
+    --brass: #8A5A17;
+    --brass-fill: #C38C47;
+    --on-brass: #1B1307;
+    --brass-soft: rgba(138, 90, 23, 0.09);
+    --brass-line: rgba(138, 90, 23, 0.38);
+    --good: #3F7A3B;
+    --bad: #B3413A;
+    --pin-ring: rgba(0, 0, 0, 0.55);
+    --shot-shadow: 0 14px 32px rgba(20, 22, 25, 0.18);
+  }
+
+  html:not(.en) [lang="en"], html.en [lang="ko"] { display: none !important; }
+  [lang="ko"] { word-break: keep-all; overflow-wrap: anywhere; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-text-size-adjust: 100%;
+  }
+  .wrap { max-width: 1040px; margin-inline: auto; padding-inline: 20px; }
+  a { color: var(--brass); text-underline-offset: 3px; }
+  :focus-visible { outline: 2px solid var(--brass); outline-offset: 3px; border-radius: 6px; }
+  p { margin: 0; }
+
+  /* Top bar */
+  .topbar {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 20;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar-inner { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 58px; }
+  .brand { display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font-weight: 600; min-width: 0; }
+  .brand img { width: 32px; height: 32px; border-radius: 8px; flex: none; }
+  .brand-sub { color: var(--ink-2); font-weight: 500; }
+  .lang { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel); flex: none; }
+  .lang button {
+    appearance: none; border: 0; background: transparent; cursor: pointer;
+    color: var(--ink-2); font: 600 13px/1 var(--font-body); padding: 8px 12px; border-radius: 999px;
+  }
+  .lang button[aria-pressed="true"] { background: var(--brass-soft); color: var(--brass); box-shadow: inset 0 0 0 1px var(--brass-line); }
+
+  /* Sections */
+  section { padding-block: 56px; border-top: 1px solid var(--line); scroll-margin-top: calc(64px + env(safe-area-inset-top, 0px)); }
+  h1, h2, h3 { font-family: var(--font-display); font-weight: 700; text-wrap: balance; margin: 0; }
+  h1 { font-size: clamp(2.1rem, 1.5rem + 3vw, 3.3rem); line-height: 1.16; letter-spacing: -0.01em; }
+  h2 { font-size: clamp(1.6rem, 1.25rem + 1.6vw, 2.2rem); line-height: 1.22; }
+  h3 { font-size: 1.3rem; line-height: 1.35; }
+  .eyebrow { font: 600 12px/1.4 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--brass); }
+  .eyebrow[lang="ko"] { letter-spacing: 0.02em; }
+  .sec-head { display: grid; gap: 10px; margin-bottom: 32px; max-width: 46em; }
+  .sec-intro { color: var(--ink-2); }
+  .badge {
+    display: inline-block; vertical-align: 0.35em; margin-left: 8px;
+    font: 600 11px/1 var(--font-mono); letter-spacing: 0.05em; padding: 5px 8px; border-radius: 999px;
+    color: var(--brass); background: var(--brass-soft); border: 1px solid var(--brass-line);
+  }
+  .badge.exp { border-style: dashed; }
+
+  /* In-text references to on-screen buttons, drawn like the app's own chips */
+  .ui {
+    font: 600 0.9em/1.3 var(--font-body); white-space: nowrap;
+    padding: 0.08em 0.45em; border-radius: 6px;
+    color: var(--ink); background: var(--panel-2); border: 1px solid var(--line);
+  }
+  .ui.p { color: var(--on-brass); background: var(--brass-fill); border-color: transparent; }
+  .ic {
+    display: inline-block; width: 1.15em; height: 1.15em; vertical-align: -0.2em; flex: none;
+    background-color: currentColor;
+    -webkit-mask: var(--m) center / contain no-repeat;
+    mask: var(--m) center / contain no-repeat;
+  }
+  .i-metronome{--m:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAFSUlEQVR42u2dW2gcVRjHfzuJgtU2BC9oLcaHqC1KvbSKsRiIXaugRkS8QMS+90UfFNEXK6KCL1UQH30QW0VFFBSSbNvUipZAq7beUQP1Ug2hxAuN1qR7fJizuB1nzs7sXHbO2e8PA8lczsx+vz3fOd93zpytKKUQdU6emEAACACRABAAIgEgAEQCQACIBIAAEAmArlGvxc++BhgBZoC9wIIAyFdnARuBTXpb1XTsOPABMKm3Q4AVad5KidPRpwBDTQZfl8BlzgI1DaMG/CoA4useYEy7lzMyKvMQMAE8A8wLAMPz6G/v2TmVPwbskF5QtC7P0fgAVemGdtZANwqAzgJYBVwsAMJ1KnB9xLHfdZe5EnN72pZaUCYAG4BlEcemgBMJypqwpR3wLHE/tYRl7QP+jDg2AvRIJJwOwIPAQGDfc8Bh/feirjWjIWX1AeuBaQHwn/p1pBumw8C3IcHatYF9rzUBaLihUQPsaXFB8dxCrc0yrWgHPAf9f0Pf42dKw3SdocEXAE2qA7tSlDvRRpe36wAMABdFHPsEOJqi7MmyuyHPUffT0G5gqcwBmesA/tAxQZjWAud0O4AK/ihXmP4CPszgHpOGe9/Q7QBM6ee9+EONaWXqjl4Vs4wLXAWQp/tp6EBEQz4NPBnj+iHgc+BxAdCe6sDOwL6PgZuJzhc1dA0wDiwHtuYBwStp+nkW+CzDe00Exoc3Ab+1uGadbj9WNO3LHIJX0vRzjWynlTQa4q90rWsVW1ypn6Ev5FimEDzH3U9DPwNv6x7XXItz1+r79xvOeTirhrm3pAB25nC/O3V7YNJlOvVxpuGcBeAW4Aeba4Ap/fwFcCSHe9YDk74q/H+q4y78GXgYYpPbgPdtd0F5pJ+TNP5vAi80QbhEpy1MkfHfwO36PGwfkCnS/weN/wYnD9Q8r416ruG648AdeTybVzIAi1lW7xjG3wJ8Cqw0XPePbj/GXQnETOnnj4BjBRm/odMM1y0CdwPvuZSK6IT7ecwwPhylJeBe4B0cS8Z1AsCz+LMk4uoE/kTet3AsG2pKP88D+3O67wJwawII9wOv42A62pR+3h0jUCoKwoaQOMEJAJ3qfiaFsCUQJwiAFBoEHmkDwmgRQ5a9JUk/zxA9hyet8afwp6X36d5QM4R3dVQe1E96/6xLNcCUfp5MWfb2kAa82fgAj3LytPWomtAw/neutQF5uZ/twObA9PWg8YkJoVDjA6CUKmqbVuFaUkr1Jyxrn772FaVUT+DYoFLqR2XWU4FrlumyBgu0B0qpwtoAU/p5f5uvjib55geDrC9Dekf3Nf3fk/CFkNK7oKzTzztSGH+zhhel1fhT3Z1yQS8a3MFwBuXHcTtLSqmxFuWsVkr9opRaVEotL8I2Xocb4GNETx1sp6uZ9ps/hT8u0AsMu+KCTOnnPfgp3zIZnyIn73oWdz/zNH5h09dtBZCV8cEfagwbjrwUOM92AKb085GQ7mDRxgc4aDi20XYApvRzrQTGbwWgansyzvQBLgS2JSzvLuD8Fud8g/8e8PoEtbQe8WWs2r5e0DhwE3ZrDfC1jS6oNG8ilnkFF69D6WcBUACAKm5oJM+2UgC01grgatsAmNLP4oYKAFCqNXm6EUAVtzQEnC4A6OgqvsM2ARjAPQ3YBGDOQQBzNgHY45jx6/hLJ1gDYBuWLB8fUy/bVgMOEG8dBhs0AzxkYyS8FXjC8ppwUMc0R7F4+forgAf0B1mpu3Rl1jz+ehKvAi+RbtKA1b+ggfyKkkgACACRABAAIgEgAEQCQACIBIAAEAkAASASAK7oXwHee3l3WFJ/AAAAAElFTkSuQmCC")}
+  .i-library{--m:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAC20lEQVR42u2dT4hMcRzAP+NPbf6ctURR2nJyochFklWSg4uIIznhIClRWqRY5cLJSU7SXhj5s8RlDyxx4IBWu267UTY1jHF4TznMjtn35s2b35vPp6ap9+bV9v289/19f//elmq1GpIfcwyBAhQgClCAKEABogAFiAIUIApQgLSHeR3wN/QC/cAqYFGHx+s78B64C0yFLqAHuAgcAuYHduNOAwPABSDVeH4pp/mABcADYGPgGeQWsDeNhLzagGsFCD7AHuBEaE/AWmC0QO3oNLAiaZuQxxOwu2CFzEJge0gpqK+A1WRfSFVQo1Kz1OGBnilfL7YjZk9YQu0JZ8lggmuuA+8U0BqOJLim3E4BpqDAU9C2GY6PtfMu6mYB5RmOXwGOGl5TkAKku6ugf+kH7vsEiAIUIApQgChAAaIABdgTDpYeYCuwBVga30xjwKO4x1tVQHbsI1oWuKzOuWPAp/hbARmkzKvA4f/8biVwxzag9ZxvIvg2whmxGThuFZQfA5ah+bEc2KCA/FhnRyxflpDduk4F0NzerLRMKiA5H1Je/zvunCkgISMp7+ARWrSrsVsFVEm20PYvl2yE03MZeE2y1Xu3FZCeH8COWbYHr4h2MlqGtohxYD0wRHN7eDcBX3E0tKVMAbvi4O4nGiPqjc9NAMPAjbjhxeHo7Hgef+wJiwJwTrh5Kg3O3Qs0jpWQBHyh8RLyEJkIKQU9LmAmGQ5JwBAdOjCWkIfAm5AEVIADwM8CBH8SOBhiFfQM2Al8Czj4n4kWhX0MtQwtA6uBc8BbohcfEcDE0EvgJLCGZIODtPKNWTX3CdsRU4AoQAGigCBJWwX9AubWOT4KPA00Jm19Y1ZaAePU3ySB75RoTwp6YhLJV8Bgp6657BYBL4CzhpFcZ8TOxN+nAnjzbSHL0BpwmmgN/02i2aGqoe3sf+AgdsQUIApQgAIMgQIUIApQgChAAaIABYgCuoo/kG5/Ykmoy4AAAAAASUVORK5CYII=")}
+  .i-mic{--m:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAEdElEQVR42u2cXYhWRRjHf1va6uZq1kVCH8KyGAhrFhZlCGJeJBl+UUhgUhJFnxeRN3XhRURiKGK31UVQ6aLiphei4mcQgaSV2G5iYkaFaVbuupu7+3jxzgu5zcw55333Pe8H/z/szcyZMzPPb2fOnOc8z9tkZkjV0w0ygQAIgCQAAiAJgABIAiAAkgAIgCQAAiAJgADUoJqBFcDnwI/A30Af8BOwE3gJuKWeJtRUR98DngbeA+5KuO5P4B1gA2ACUL5uBNYDr2Vst92tll4BKE8bSzB+UV8Ai4FhPQNK0/IyjA/wBPCWVkDpD9xuYGqg/jxwBBgEHoxc1wu0A79pBWTToohR17mH8VLgKaDNrRTfVnMz8Ly2oOxaGCj/BFgNDPynbBjYBKwJtHlcW1B2fQPM9JR3AN8H2kwALgA3jSjvcytBKyCDbg+U/xBpcxk45ylvAVoFIJvGB8oHE9qF6lsEQHMSAA1WcxIADVZzEgANVnMSAA1WcxIADVYABECDFQAB0GBHT00CoDkJgAarOaXSmJz6uRd/DOfZGgLgG+NF4OdGiIro5f/fZDspxPSEdAZ/XFALcIXwd+S+QN04rg9lYUTs0GVP+QfAq42wXC95ypLCyH8NlM+NtJlDOGJ6INJucoZx1yWAPzxldye0ORIofx+YFPjvXxtoczihr1DI+4VGAeALpJoGTCQeXu7TdOArClHPrc7wjwKH8Adyxe5V1AOB8m8rbhkzy+PvTfNrQUK7vVa+TpnZ2IR+tgTa3lpp2+S1Ag4RDj+P6fUyEyyGgZeBq5FrJuKPQ/3OnYIaYgv6Gn/I4NLIAxDgBPBMGQkWq4HdJKc++aLwOnOxTE5bEGa2IbDM16Zou9DM/smw7Vw1sxdT3He8mZ0L3OOePOySJ4A2Mxv0TPSKmbWnaN9uZp0pjH/AzGalHNOawD268rJL3uHpnwX2/aPAbODfFPdoo5B6NAuYQiGJ73e3Z+/McHJ5BDjo2o/Uw+6k1XD5AdOcgZo9dR8Dq3JKLZ3q3jPu9NRtA5Y1quOqh0Kur0/PUshyqbQ//w5gX8D4f1Xa9VDNh3Dxr9nMjkf28G1m1lqhvh8ys18ifa/M2x7VAFB8IF+MGKLbzOaNMvS3zWwg0ufGatiiWgAws/lm1p9wotlsZjPK6GOMmS03s56Efna5a3O3Q7WT9BY4P01zwnV7gE8pZL6ncZDNAJYAz6Vw+nUBT6Y8gTVkluR8YEvCG3FRQ8BJ4Jj7XnDJuZlbgduco+4+dzxNo4+AF0jOO2v4NNU2YGvEmzna6gdeAT5E308BOO1eft5NcJyNhvYD99eC8WvtA3Y/hR/WmAnsqsD9u53jbZ7bxlCmfFwdwBvurXRCifcYAg64F7yuWvwBp3r4vaBx7rT0mPP/dABjI/7/Hudb2g/swP85VADK0Gzgy0DdKneyQUFMldNQiXUCIAmAAEgCIACSAAiAJAACINWnK0IrQBIAAZAEQAAkARAASQAEQBIAAZAEQAAkARAASQAEQEqva2x69v0MG92wAAAAAElFTkSuQmCC")}
+  .i-pencil{--m:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAADOElEQVR42u2cS0tVURiGHw+BCDWMGhRN8xcEXQgaRaP+Qmh5wwsqaiqKms76B9GwcaOKBkF0GTWvoYcaFDkrCCd+TU4Q4jp+7rMva+/1vnDwsI/v3pznca2919Ftn5mhVJeWEEiABCgSIAGKBEiAIgESoEiABCgSIAGKBEiAIgESoEhA0TkHPAP2gK/AY2CgrIP3Jf4ryUvA287X//MOuAP81ggoHz7ADeAFcFoCyodfqoSW4HdN4RJagl+thJbgVyshJQEDQH8P/UIkpCTgC3AL+J6DhAEJyJbPOUl4pIXY8bkA/AT2j3htEHgDnM+472/ARY2A7ifc98DzwLzf60jQFOS82rldkITXmoJOdqn5Crib03TUBq4APzQC/Nf5eY2ENnAzL/hNEuBZZPUq4R/8ttYB2Ve4WSUUAr8JArJ8vHBSCYXBr/tJuJfPdrwn5v0i4ddZQK/wPRIuA3+KhF9XAR74BjwArgL3epBQfMysTo9LZrZr3XNgZkOd72+Z2VM7Pi/NrL+K99RE+MOHelFLaDVs2hkBnhzafgB8dBxjEDirKSj7T/5IoD/Ueb1bdjvH0RSUEf5ooD8cM/zYBXjgm5mNBfr3Y4cfswAv/PFAf6QO8GMV4IU/EeiP1gV+jAK88CcD/bE6wY9NgBf+VKA/7uhGBT8mAV7404H+RB3hxyLAC38m0J+sK/wYBHjhzwb6U3WGX7UAL/y5QH+67vCrFOCFPx/ozzQBflUCvPAXAv3ZpsCvQoAX/mKgP9ck+GUL8MJfCvTnmwa/TAFe+MuB/kIT4ZclwAt/JdBfbCr8MgR44a8G+ktNhl+0AC/8tUB/uenwixTQK/yVFOAXJcALfz3QX00FfhECvPA3Av21lODnLcALf1PwixHggb8V6K6nCD9vAcdlO9DbSBV+mQJ2Ap3NlOGbWa5/HR3a0Qfg+hHbt4BV5z1ZbRqaUyUc49cR27aB5dThlyXgcHaAh4Kf/w0aoR3tAZ86z88A1wS/XAEnSVLwY7tLMjn4MQlIEn4sApKFH4OApOFXLSB5+HmvA/pQ9A+bJECRAAlQJEACFAmQAEUCJECRAAlQJEACFAmQAEUCYstf5YUBNhHiilAAAAAASUVORK5CYII=")}
+  .i-eye{--m:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAFnUlEQVR42u2cXYhVVRTHf/f6kTpTUBGmTuRH3zpqoFAQ9ZRQBtFLNQ8lOANlWRY9qFgEkVQPSS/pjGQw+iAaZmWhVA/NhE1QpJGFaSihdZVIaRrTMfHfw11DF5l77zkz+9675876w4Zh9szea6/fOfucs9faOyMJV+2UdRc4AAfgcgAOwOUAHIDLATgAlwNwAC4H4ABcDsABuByAA3A5AAfgcgAOwOUA6lJjI7dvCjDfyo1AE3AdcCUw0UoG+Ac4C5wGjgHHgcPAfiu5WAeYiSwvaBJwH3CvlZmB2j0CfGZltwFzAAM2mLMfAx4CGirc3xlgJ7DFgGi0AphgTn8euLVGNvwEvGUwzo0WAFlgCfCKzekx6BjwMtAJXKxnAHcB7cDsSJ+JB4Angb31BuAK4HUbXGYY7Qj4E/gd6LNpQ/Y21AhMBa4O0Ec7sArorQcAC4DtwIwhOOIA0A302M8Hgf4y/3cZcAswB7gTuMfuuLRQjgIPA99W1DuSKlmeldSvdOqR9IykaQHtaDJbelLa0m+2VMxHlWp4rKSOlAPdKKm5whcEkuZaX2kujHYb04gA0CBpT8KBXZC03q5QqlyaJG0wG5Jot40tagANkroSDugLSXNq4PhLyxyzJanNDbECmJTQ+eclrZaUjcD5AyVrNp1PCGFSbACykj5IYPxhSQsjcvylZaHZWE47Q11AoQxfl8DoXZIaI3b+QGmU9HGC8ayLBUBLAmO3SxoX6BmzVNIOSb9I+ltSn/28w+pCzNHjJL2XYFyP1hrALEm9ZYzslDQmgFNaJeUSOCVnfzvc/sZI2lymr7/MBzUBkJX0dRkDN0vKBLgaNym93glw12UkbUnw4ZitBYDlZQz7TtKEAFfiUJxfCGG4/U+UtK9MP09VG8AUu/2K6ZSkGQEG36bhK8R0NFPS6TJT0ZRqAmgvYcxFSYsDPXBzAQDkAj2YH7CxFdOGagGYJenfEoZsCvQ62KpwWhrIpnfLfGCmfiAPJS3lpRLZFH3AmkALtYsDLvqGamuNjXEwjQNerHRe0GSgpUT9a8CJQIOdHxDAvEDt5CywVEwt5qOKAVgGjC9S9yuwLqDTJgds69qAbb1pYy0WDFpWSQCZMhGsWKVY+0oLYD1wvkjddEsxCaWTkbb1AnB9kbp+iydXDMBJYGuJ+tUBb/f9AZ32PeFSJVeVqN+aFvZQ3oJeBS4UqbscWBtosJ8EBBCqrbWWfTGYLphvqhKU7yjzIXZ/oA+xExF9iC2O5UNstC5FnIppKQJL14h9MS7EV/mEBItxT/ty9ODOr+vlaCTdUMWATFvCZ0LO/jZEQKazTF+9tQzIpAlJbgsYkmyV9L6kI5LOWDliv2sNGJLcnmBcLSMpKP9RJRKbKhSU3zWSgvJp0lIOSVoQsfMXmI0jLi1lIDGrO2Fi1soIE7NWJkzM6ooxMavw9u1W8jS/2RE4f3aK1MSumFMTCyGkSc59O3AqetIyzRKDkybn7hkJybmF6ekbU7yzn7M4czWSdZttKSVNenrHSEpPLywrEs6rhdprKS/TAl/tyyV9pfQbNFZU0kfV2KK0ENg2xC1KPwBdBVuUfi4RjxjQeOBmoBm4w7YoNQ9xi9IjwDf1sknvDeCJABvo/rDYbB/54wky5PccN9p6/TUB+ugAVtbLJr1C3Q1sAG6LNHT5o8V0v6ROT0vpBuYCbcBvETn+uNk0r5rOj+GogiXAc+S3ldZCB8kfVdDJKDqqYLBMi0XA48CDVOewjg+BzcCno/mwjsHUQP64mkXkT1CZHqjdo8Dn5vDdBgE/rqa8pgK329x8E/nDPZqAq/j/wCbsbegscMrm8+PAIcuG2Ef+aAP8wCaXnxnnAFwOwAG4HIADcDkAB+ByAA7AAbgcgANwOQAH4HIADsDlAByAywE4AJcDGCX6D2dstzv2h703AAAAAElFTkSuQmCC")}
+  .i-star{--m:url("data:image/png;base64,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")}
+  .i-dots{--m:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAABf0lEQVR42u3cMS4EYRjH4XeFSkelcQAFLqB1BydQuYMrOICIk5C4ABLdFjrddgqJ9desSiIzsss3k+eXfN1872b22WK+bDKTJKX/a81XAACAAAAQAAACAEAAAAgAAAEAIAAABACAAAAQAAACAEAAAAgAAAEAIAAABACAAAAQAAACMLjW/+hztqrqqKp2quq1qh6r6mHE87qXZJVrO8llkvd87ynJ8cjm9V6rHL6bZJqfmyc5G8m8pgA2ktynW/MOv7TW5zUHcJp+PQ183q/Xqp6CTnpev1dVBwOe19xj6P6S97Q+rzmAzSXvaX1ecwAvS97T+rzmAG56Xj+vqrsBz2sO4KKq+rwL7bqqZgOe1+RJ+LzjI950cSId+rzmTsKTxU1+/HBz94sT6RjmNQfwtQ6TXCV5TvKWZJbkdnEY2hjhvF5r4rWV/g8AIAAABACAAAAQAAACAEAAAAgAAAEAIAAABACAAAAQAAACAEAAAAgAAAEAIAAABACAAABQvz4BNda+wmzgp5QAAAAASUVORK5CYII=")}
+  .i-steps{--m:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAB30lEQVR42u2bu0rEQBRAT3yAhbCVvYWF2llaiZWLlSKIrdUq22jlH1jYaGdpI1iJj0ZRED/A2kfhf6gIsRkhgvtwN8km6zkQmIGd5p7MvTM7mSiOY6R3DBgCBShAFKAAUYACRAEKEAUoQBSgAFGAAkQBChAFKEAUoIAGxA2eA0PrDFCAtGaoy/HbiXYNmPzj+BowVdLYbRVBQDLXVzsQsAws/GcBpiBrgAJEAQqQki5Du6XqDBAFmILS4SHRfjK07RF5RckUpABRgAJEAS5DSfc/8XfgDngxzNktQ1sN/gBWgQtD3RsBAK/AhKHuXQ2oGObsBES/PGPAY+I3u03GXzf5tqjoTyFnQAW4AaZDfw/Y9z3PR8AocAXMhP4hsGOI8xEwAlwCs6F/DNQNbz4ChoFTYD70z4H1NPOkAhozCJwAi6F/C6wBn4Y2n53wEbAS2m/APbBJ8y/okpwBz27Est2IfS9XxT/jFCAp1wBTizNAAaIABYgCPBOmzbtk4k7YFCQK6N8z4YifF7jxTDif+wFLwHhoz/lu5y9gg/LeercGKEBKL6DaQRG2BmS0E263CHsm7E7YGqAA8UzYGSAKUIAoQAGiAAWIAhQgClCAKEABogAFiAIUIApQgCig7/gC1xSi2+yEfDMAAAAASUVORK5CYII=")}
+  .i-piano{--m:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAACRElEQVR42u3dMUhUYQDA8f9li+UgtQSGJYGOBS02GU1JjiFtDe6SEA5OkmBTGOLqIggZBSKkTlJNRrg0WeASLRUlRgVBcg2+8IiE9/ne+R33/f9w8DgfH/j93t177453r1KtVrF4HXMKBBDABBDABBDABBDABBDABBDAjqbjJY93GbgKnKnD2I3Qd+AtsAJ8aSSAC8As0JfIhvsTmMwehT7Pr5TwfcBFYA04leA7yGPgVhGEovuAk8BSopMPMAiMxdwJDwOdie9Hx4DTsQBuehzDCaA/FkC38w9ATyyAtgOefwhUcjxCWs05Zj3HDp0HT8Q8EzYBBDABBDABBDABBDABBDABBDABBDABBBDABBDABBDABBDABBDABBDAUgH4FLDuTuDY3wLW/ZgqwHLAuouBY4esv5IqwCiwmWO9GeBR4Nh3gNc51psHFmiS64RD+wxcAgaAs8B9oDX721w2ga9yTuS/bQNXgBtAFzACnGP/goxnwBvgJU10ofZh+gU8zZbHawCWS9gyd9m7ihP2Lif9C7Cevao8CvIoyAQQwAQQwAQQwAQQwAQQwAQQwAQQwAQQwGjkryR3gZb/PN8HTB1ivNaa5dtAb4n/6/ma5etAe4lj/ybSTxd/ADrcjrkLPIjxFvTcuS82D0UBpij46+FN0AtgIxbABjCR8OR/BYZiHwWNA/cSfCW8B64BW0S+fwA1d88YYf8OGi005x003gFPgGngR9EBK97Q2RMxAUwAAUwAAUwAAUwAAUwAAUwAAaz+/QFftlOYNLx3nAAAAABJRU5ErkJggg==")}
+  .i-flask{--m:url("data:image/png;base64,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")}
+  .i-check{--m:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAB9klEQVR42u3cPU4CURiF4TN2zkrchr3WbkFNbFwLsBJbcAVuB8tjISQWBMZh7t9335NQa94Hch1nwmBbrNxuSAAAAAwAABgAADAAAGAAAMAAAIABAAADAAAGAAAMAAAYAAAwAABgAOTeIOkOgHLx15K+JN0DUCb+i6RR0kcKBAAuxz8uCQIA0+InQwBgevy/CO8AlIkvSTtJTwCUi/8oaQ9AgPgAFI7fO0Dx+D0DVBG/V4Bq4vcIUFX83gCqi98TQJXxewGoNn4PAFXHjw5QffzIAE3EjwrQTPyIAE3FzwEwSno7hCH+qdlO9Rptb/27te0h4c8abG98edvD76VaXjniOzFCs/FTAZyKnwqh6fgpAG7PxF8aofn4thc/hIcJB+6rpNWVB3ObB26mQ3i0vZvwzpz7SQjxzs9xCKdACBU/JUAKhHDxUwMsiRAyfg6AJRDCxs8FcA1C6Pg5AeYghI9vW0PmL++e+nj35vCPwufm/86/dEHj/N+evtQz9s3HL3U/YC/pQdJn7/FL3pC5BiFM/NJ3xOYghIpfwy3J/yCEi1/LPeEpCCHj13RT/hxC2Pi1PRVxCiF0/FLXAVOvExw9fq0ARwRL+lbw1Qogvq6GAQAAAwAABgAADAAAGAAAMAAAYAAAwAAAgAEAAAMAAAYAAGz2fgCB4YxCzCqZBgAAAABJRU5ErkJggg==")}
+  .i-close{--m:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAACXklEQVR42u3cO1ICURCF4cONLSN24DKA3NcmcAW6OTVXl+EOSFRSaQMnIBh0ePXtvvynimyqZup8xQzcx4zMTKReChUAAAABAAACAAAEAAAIAAAQAAAgAABAAACAAAAAAQAAAgAApB2AccAuxqcCMJf0LmkSqPxpd01z9zObmednbmYr+82XmU2cz9/3mXbXYmb23V2j2/lrlW9BENbLtxoINcuvjdBXvjvCyGFx7ri7v57/ccxS0qWkN8d7/pOksz+O+ZR0IWmR/SG8kHTblbwpZ5KenR7MQ8pfSro5dvmev4JeJF0HQBha/pWk19Z+htZGCFd+jf8BtRBCll/rj5g3Qtjyaw5FeCGELr/2YNyxEcKXH2E09FgIKcqPMhx9aIQ05UeaDzgUQqryo03I7IuQrvyIM2K7IqQsX5LLYNwumUl6HFDopaRR1vIjA2yDoKzlRwcYiqCs5WdYFTHkmZC2/CzLUnZBSFF+pnVB2yCkKT/bwiw70rEAHGh4ocb05kkAbFN+OoTSYPmpEEry8peBVls0BbDN2M51ZoSSvPzXQEtemgDYdVQzLUJpoPzUCKWR8tMilIbKT4lQGis/HUJpsPxUCKXR8tMglIbLT4FQGi8/PEI5gfJDI5QTKT8sQqRNep7TiENWWzS1Se9Bm6cJa8zh/vdNMEn3Hpv0PPfl3m3YqD2tuFF71rNXeNXiRu0+hNrl9yGsWn5VwTrCR5Dy1xE+vMv32im/6cG8kMK9rmbB2lDxwiYCAAAEAAAIAAAQAAAgAABAAACAAAAAAQAAAgAABAAACAAAkD3zAwC521J/9NMRAAAAAElFTkSuQmCC")}
+  .i-info{--m:url("data:image/png;base64,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")}
+  .i-alert{--m:url("data:image/png;base64,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")}
+  .i-rec{--m:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAEmUlEQVR42u2dPUxUQRDHf0e0wUNNRCVgtBBFKqiwIiRqI7QaBRJJkEIlfiRqJ2JBqYUYPxLFRBLxqxWsMCFUWkGFCpURAgoFetKY3FnsGomQHHL79d6bf3IJxbtlZ/63O7Mzs/NSuVwOgT8UiQqEACFAIAQIAQIhQAgQCAFCgEAIEAIEQoAQIHCDDRGc83ZgG5DWnxTwA8gAC8A3IcAc9gMNQD1QDewDtuT5ziIwCUwAo8AI8ClUAVMB5gPqgBbgOFBuaMwZ4CXwDHgvBKxEMdAOXAQqLf+vKeA28BhYSjoBm4DLwAW9r7vEPHAHuAX8TCIBJ4GbQIXnH+EX4ArwIikElAP9wOHAbM8wcErbi9ieAxqB8QCVj57TGHA0rgR0Aa+B0sDPGIPAtThtQUXa2J2L2IHvrnYOslEmoAh4qg1uFPEcaLVJgu0t6E6Elf/HU+uNqg3oiuC2sxo6bdoEW1tQoza4KeKBHNAEvIkCAeXa1SwlXvgG1Jo+J9jYgvpjqPw/Lmp/6DbgZKCHLJOHtROhbkGbgI/4j+3gIHZ0AEMBPJMr4HIClA+wS8sa1AooBj7jPqTsC/PAHgzkE0ytgNMJUj7ayWgPaQVMYj+TFRqmUDlq7yvgYAKVj5a5LgQCmkkumkPYgqYNVi/kw09U6nBQn7bndJigDKjR4YIT2iV2gZlCPb9CCagCPjgStg8VFJvN81wZ0KMdAxeoooC6o0K3oAYHAv7SyuxYg/LRz3Tozy8H82vwaQPqHQh4BlXDs54Vc9bB/Op9ElBtWbhH61T+chL6LM+x2qcNWAQ2WzS4lWvcdvLZhCmLhnkR2OpjBeywqHxQ+dhZA+PMWi662oIKVTsnwHboYTDQsYzqohAC0paFGjM41rjluabjSMCcwbFmLc+1xAcBUUq4pxwk7Z0T8MOyUDsDHWs1ZHwQkLEsVK3BsWriSMCCZaGaAh3LqC5CP4jtNWCMY3sQA5UJw+L1pR4D4/RYDk9P+owFTVhe2h0Ulnttx35YesInAaMOXMgH6yShXX/XNkZ9EjDiQMCNqIjmwzW6k2X62T79XdsYSVpK8jkqtjO2zEDv1G5rE6o8MjEpSVCXni+QTNwGLvmuihgguRiQwiykMAss36MKePtBinP9YAHYTUDFuUuoG5FJQa+pTismL2ikUUVacb8jMI0qxgrugkYGuJqAX/8Vk+1tbNySHAYOxVT5w8ARAr+mWqFPqaUxvBVTE4VrqtNAGwXkSQnzonabjV5CtloVDAE3YkRAt5aJqHVLuYebAlnbMnQi7WqQdjXrQFYLcD+iv/xW2w2bXLQsy6La1nRHxDDngOt628kSs66JjcCTgF3Uee3tDBHTrolDqMzV20APWTUule+rff00qutIi/6bAGI7zfqEO0PCWhenUY0vzuM+lL2AimomtnUx/+QTTqNyyy6ad/eiqiaWpHs6q7Y+aAGOYbZ9/StU+/p3SPt6/ucS9L8vcMhXi/qdlS9w+Ii8wMEYdix7hUmJ9tsz/H2FydcoCZOSN2ojb1ESAgRCgBAgEAKEAIEQIAQIhAAhQCAECAECISAJ+A0QvziIFn9pkgAAAABJRU5ErkJggg==")}
+  .i-play{--m:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAACaElEQVR42u2dO48PURiHnxFs47KhQNC6xzYKbMQXcAsh9C6JEHoiEWR7IiGE1rqEWFqskIjC/RJ0VkFtO8Uo5iTiA+x5Z+Y8zxf4/+d98p75zTnvZKq6rpE4plkCBShAFKAAUYACRAEKEAUoQBSgAFGAAkQBChAFKEAUoABRgAJEAQqYQtYBOxQQx3zgLnAHWKSAOHYCn4FDQKWAGOYCl4BxYIUC4tgEvAFOATMVEMMAcBp4DWxUQByrgGfARWCOAmKogMPAJ2C7AuJYDNwDbnc9snb9SXhX6oaDXY2sfdiKGAQup8i6XAGxkfUtcBKYoYC4yHomRdYNCohjdYqsF4DZCoi7tiPpJr1VAXEsAe4DN4GFCohjN80u6/42RdbSTsQGgSvAY2CZAuLYDLwDTkRH1pLPhAeAs8ArYL0C4lgDPAfOR0RWBfyrw1HgI7BFAXEsBcaAUWCBAuLYAzwCZikgP3WKqsPA5FT/2HTr/R9faM4WnnoPyMufFEmHchbfDmh4ARwAPvgckJffKXoORxW/5A4Yo5mu+OFeUF5+poi5rQ3FL0lADVwFVgK32vTHSliCvqZoOe6JWP5oeQ5Y29bi97kDQqNlyR0wCRyLjpaldsCDFC0ncDIuK7+AvTSjJxM4mpiVaylajnb1Arq6BH1L0fIJvh+QPVqOpGjZ+eJ3rQNe0gxVvcd3xLJHy+M00869Kn4XOuBhipbf8T3h7NFyH82ISG+L31YB11O0vEEBVC36jNUQMI9mcLYYKr8j5hKkAFGAAkQBChAFKEAUoABRgAJEAQoQBShAFKAAUYACRAEKEAX0jr+3p17eZKbNkgAAAABJRU5ErkJggg==")}
+  .i-share{--m:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAACc0lEQVR42u2dzU5TQRhAT40rWsAqxLqRpK6UEKIoaQiYGE38SfANfAL3PoovIE8AUVGBhbpwwyNI4koS2Slu66LfwpD22pZ7S+d6TtLNvTPT9jtzpzPT26+VdruNnB3nDIECFCAKUIAoQAGiAAWIAhSQEPfikSyVhPeC7gJvgTbwBPjoFTA6VoE3wARQBV7HMQWMgJXo+dW/jtXi2IoCiqUFbEfAT1KLcy0FFMMy8A6YzCgzGWWWFZAvd4D3wFQfZaei7G0F5MNSBHR6gDrTUeeWAk7HTeADcGGIunVgJ9pQwBAsRgDrp2ijHgIXFTAYCxH8izm0dSnaWlBAf8wDu8BMjm3ORJvzCsjmBrAHzBbQ9my0fR33groyAbwELvcRyKUe5/aBH/+ofwg8B34rYDgexoq3G49iIeZKWBSgAFGAAiSb84zuG6x1oEn2dvLJGU2ebPdZ7hfwFdgCPqcuoAFsAPfHZPo6CC/obGE8i7VDckNQA/gyJsEflgfxHhopCtgA5kowTM8Br1ITsJZ4z+92JaymJOBpCScs6ykJaJZQwLWUZkHVjHOVMwpgv8/ba3ey5kLMlbAoQAGiAAWIAhQgClCAKEABogAFiALwtpRRcUTvW0yOFFA8+8BjhyBRgAJEAQoQBShAFKAAUYACRAEKEAUoQBSgAFGAAkQBChAF8B/elnLM4L/DHXd+pnQFHJSwsx6kJGCzhAK2UhLwiU6W2rKwS0HZs4pM3HqFTrKjq4kH/xudv0U5TG0W9D1e+F7iPb9VZMqyUaUuXqOTQ6hJdiaVceA4PnA3YyjF3NEuxEQBChAFKEAUoABRgAJEASXhDwkBXMjcPXZ/AAAAAElFTkSuQmCC")}
+  .i-pause{--m:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAA2ElEQVR42u3dsQ2EMBBFwe8TxdAJ18nFVwkxnUAndGNqsIUwwbx8ZWlH4ASJUmuNxvWxAgAABACAAAAQAAACAEAAAAgAAAEAIAAABACAAADQ/U0Dzlw7ZrYkZ+PMnOTXcdb/yWWUAR9m9Rz4TXI0zixJ9p6deAW5AwQAgAAAEAAAAgBAAAAIAAABACAAAAQAgAAAEAAAAgBAAAAIAAABACAAAAQAgAAAEAAAAgBAAAAIwAsrfmPlCQAgAAAEAIAAABAAAAIAQAAACAAAAQAgAAAEAIAAANC9XSXjD7fwOc9oAAAAAElFTkSuQmCC")}
+  .i-fermata{--m:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M3 17a9 9 0 0 1 18 0' fill='none' stroke='black' stroke-width='2.2'/><circle cx='12' cy='15.5' r='2.2' fill='black'/></svg>")}
+
+  /* Hero */
+  .hero { border-top: 0; padding-block: 44px 56px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 290px); gap: 44px; align-items: center; }
+  .hero-text { display: grid; gap: 18px; min-width: 0; }
+  .lead { font-size: 1.1rem; color: var(--ink-2); max-width: 34em; }
+  .toc { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+  .toc a {
+    color: var(--ink); text-decoration: none; font: 500 14px/1 var(--font-body);
+    padding: 10px 13px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel);
+  }
+  .toc a:hover { color: var(--brass); border-color: var(--brass-line); }
+
+  /* Phone screens */
+  .phone { position: relative; margin: 0; }
+  .screen { position: relative; border-radius: 20px; overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shot-shadow); background: var(--panel); }
+  .screen img, .screen video { display: block; width: 100%; height: auto; }
+  .phone figcaption { font-size: 14px; color: var(--ink-2); margin-top: 12px; }
+  .tempo-mark { font-family: var(--font-mono); color: var(--ink); white-space: nowrap; }
+  .clip-btn {
+    position: absolute; right: 10px; bottom: 10px; width: 38px; height: 38px; border-radius: 50%;
+    display: grid; place-items: center; border: 0; cursor: pointer;
+    background: var(--overlay); color: var(--overlay-ink); font-size: 18px;
+  }
+
+  .pin {
+    position: absolute; left: var(--x); top: var(--y); width: 26px; height: 26px; transform: translate(-50%, -50%);
+    display: grid; place-items: center; border-radius: 50%;
+    background: var(--brass-fill); color: var(--on-brass); font: 700 13px/1 var(--font-mono);
+    box-shadow: 0 0 0 2px var(--pin-ring), 0 3px 8px rgba(0, 0, 0, 0.35);
+    transition: transform 0.15s ease;
+  }
+  .pin.on { transform: translate(-50%, -50%) scale(1.3); }
+
+  /* Screen + legend */
+  .feature { display: grid; grid-template-columns: minmax(0, 310px) minmax(0, 1fr); gap: 44px; align-items: start; }
+  .legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; align-content: start; }
+  .legend li { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 12px; align-items: start; }
+  .legend .n {
+    width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; margin-top: 0.5px;
+    background: var(--brass-fill); color: var(--on-brass); font: 700 13px/1 var(--font-mono);
+  }
+  .legend li.on .n { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--brass); }
+  .aside { display: grid; gap: 26px; min-width: 0; }
+  .tips { list-style: none; margin: 0; padding: 18px 0 0; border-top: 1px solid var(--line); display: grid; gap: 10px; color: var(--ink-2); font-size: 15px; }
+  .tips li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 10px; }
+  .tips .ic { margin-top: 0.3em; color: var(--ink-3); }
+
+  /* Tabs */
+  .tabs { border: 1px solid var(--line); border-radius: 16px; background: var(--panel); overflow: hidden; max-width: 720px; }
+  .tabbar { display: block; width: 100%; height: auto; }
+  .tab-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); }
+  .tab-cols > div { padding: 14px 12px 16px; display: grid; gap: 6px; align-content: start; text-align: center; min-width: 0; }
+  .tab-cols > div + div { border-left: 1px solid var(--line); }
+  .tab-cols p { font-size: 14px; color: var(--ink-2); line-height: 1.5; }
+  .tab-cols .ui { justify-self: center; }
+
+  /* Quick start */
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 64px; }
+  .step { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 300px); gap: 28px 44px; align-items: start; }
+  .step-text { display: grid; gap: 14px; align-content: start; min-width: 0; }
+  .mark {
+    display: inline-grid; place-items: center; width: 42px; height: 42px;
+    border: 2px solid var(--ink); border-radius: 3px; font: 700 22px/1 var(--font-display); color: var(--ink);
+  }
+  .step .legend { margin-top: 4px; }
+  .callout {
+    display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 10px; padding: 14px 16px; border-radius: 12px;
+    background: var(--brass-soft); border: 1px solid var(--brass-line);
+  }
+  .callout .ic { color: var(--brass); width: 20px; height: 20px; margin-top: 0.15em; }
+  .seq { display: grid; gap: 10px; }
+  .seq-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .seq-row .s {
+    font: 500 13px/1 var(--font-mono); padding: 9px 10px; border-radius: 8px; white-space: nowrap;
+    background: var(--panel-2); border: 1px solid var(--line); color: var(--ink);
+  }
+  .seq-row .s.again { border-color: var(--brass-line); color: var(--brass); background: var(--brass-soft); }
+  .seq-row .to { color: var(--ink-3); font-size: 14px; }
+  .seq-note { font-size: 14px; color: var(--ink-2); }
+  .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .pair .screen { border-radius: 16px; }
+  .pair figcaption { margin-top: 8px; }
+
+  /* Modes */
+  .modes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .mode { padding: 22px; border-radius: 16px; background: var(--panel); border: 1px solid var(--line); display: grid; gap: 14px; align-content: start; }
+  .mode.song { border-color: var(--brass-line); }
+  .mode-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+  .seg { font: 600 15px/1 var(--font-body); padding: 11px 18px; border-radius: 10px; background: var(--panel-2); border: 1px solid var(--line); color: var(--ink-2); }
+  .mode.song .seg { color: var(--brass); background: var(--brass-soft); border-color: var(--brass-line); }
+  .turns { font: 600 12px/1.3 var(--font-mono); letter-spacing: 0.04em; color: var(--ink-3); }
+  .mode.song .turns { color: var(--brass); }
+  .mode ul { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; color: var(--ink-2); }
+
+  /* Recordings + MIDI step lists */
+  .howto { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; counter-reset: howto; }
+  .howto li { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 12px; counter-increment: howto; }
+  .howto li::before {
+    content: counter(howto); width: 26px; height: 26px; display: grid; place-items: center;
+    border: 1.5px solid var(--ink-2); border-radius: 3px; font: 700 13px/1 var(--font-mono); color: var(--ink);
+  }
+  .checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: 15px; }
+  .checks li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 10px; }
+  .checks .ic { margin-top: 0.3em; }
+  .checks .ok .ic { color: var(--good); }
+  .checks .no .ic { color: var(--bad); }
+  .checks .inf { color: var(--ink-2); }
+  .checks .inf .ic { color: var(--ink-3); }
+  .block-title { font: 600 12px/1.4 var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
+
+  /* FAQ */
+  .faq { display: grid; gap: 22px; max-width: 46em; margin: 0; }
+  .feature + .feature { margin-top: 64px; }
+  .marks { display: grid; gap: 12px; margin: 0; font-size: 15px; }
+  .marks dt { font-weight: 600; font-family: var(--font-mono); }
+  .marks dd { margin: 2px 0 0; color: var(--ink-2); }
+  .faq dt { font-weight: 600; }
+  .faq dd { margin: 4px 0 0; color: var(--ink-2); }
+
+  footer { border-top: 1px solid var(--line); }
+  .foot { padding-block: 28px 44px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px; color: var(--ink-2); font-size: 14px; }
+
+  /* A wide screen (the tablet), and the notes under it */
+  .phone.wide { max-width: 860px; }
+  .phone.wide .screen { border-radius: 14px; }
+  .wide-tips { max-width: 860px; margin-top: 22px; }
+  /* A menu shown on its own, above what it leads to */
+  .menu-shot { max-width: 400px; margin: 0 0 24px; }
+  .n-inline {
+    display: inline-grid; place-items: center; width: 22px; height: 22px; margin-right: 6px; border-radius: 50%;
+    background: var(--brass-fill); color: var(--on-brass); font: 700 12px/1 var(--font-mono); vertical-align: 1px;
+  }
+  /* Two phones where a feature usually has one */
+  .feature.wide-left { grid-template-columns: minmax(0, 440px) minmax(0, 1fr); }
+  .aside .pair { max-width: 440px; }
+  /* More features, a short paragraph each */
+  .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 56px; }
+  .card { padding: 20px 22px; border-radius: 16px; background: var(--panel); border: 1px solid var(--line); display: grid; gap: 8px; align-content: start; }
+  .card h3 { font-size: 1.1rem; }
+  .card p { color: var(--ink-2); font-size: 15px; }
+
+  @media (max-width: 760px) {
+    section { padding-block: 44px; }
+    .hero { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-block: 32px 44px; }
+    .hero .phone { max-width: 270px; }
+    .feature, .step { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+    .feature .phone, .step .phone { max-width: 290px; }
+    .step .pair { max-width: 380px; }
+    .modes { grid-template-columns: minmax(0, 1fr); }
+    .feature.wide-left, .cards { grid-template-columns: minmax(0, 1fr); }
+    .menu-shot { max-width: 320px; }
+    .brand-sub { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pin { transition: none; }
+  }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@600;700&family=IBM+Plex+Mono:wght@500;600;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<script>
+  // Pick the language before anything renders: #en / #ko in the link, then the viewer's last
+  // choice, then the browser language.
+  (function () {
+    var lang = (location.hash || '').slice(1).toLowerCase();
+    if (lang !== 'en' && lang !== 'ko') {
+      lang = '';
+      try { lang = localStorage.getItem('mt-guide-lang') || ''; } catch (e) {}
+    }
+    if (lang !== 'en' && lang !== 'ko') {
+      var nav = (navigator.languages && navigator.languages[0]) || navigator.language || 'ko';
+      lang = /^ko/i.test(nav) ? 'ko' : 'en';
+    }
+    if (lang === 'en') document.documentElement.classList.add('en');
+    document.documentElement.lang = lang;
+  })();
+</script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="#top">
+      <img src="media/app-icon.png" width="120" height="120" alt="">
+      <span>MusicTools</span>
+      <span class="brand-sub" lang="ko">사용법</span><span class="brand-sub" lang="en">Guide</span>
+    </a>
+    <div class="lang" role="group" aria-label="Language / 언어">
+      <button type="button" id="lang-ko" data-lang="ko" aria-pressed="true">한국어</button>
+      <button type="button" id="lang-en" data-lang="en" aria-pressed="false">English</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" id="top">
+    <div class="hero-text">
+      <p class="eyebrow" lang="ko">처음 쓰는 분을 위한 안내</p>
+      <p class="eyebrow" lang="en">For first-time users</p>
+      <h1><span lang="ko">박자에 맞춰<br>저절로 넘어가는 악보</span><span lang="en">Sheet music that turns its own pages, in time</span></h1>
+      <p class="lead" lang="ko">악보 PDF나 종이 악보의 사진을 가져오면 화면 가득 펼쳐 보여 주고, PDF는 페이지별 마디와 도돌이표까지 읽어 둡니다. 템포만 맞추면 연습할 때마다 지금 연주하는 마디가 악보 위에 표시되고 마지막 마디가 끝나는 순간 다음 페이지로 넘어가서 손을 악기에서 뗄 일이 없어요.</p>
+      <p class="lead" lang="en">Bring in a PDF, or photos of a paper score: MusicTools shows it full screen, and reads the bars and repeats on each page of a PDF. Set the tempo once, and every time you practice the bar you're playing is marked on the score and the next page appears as the last bar ends, so your hands stay on your instrument.</p>
+      <nav class="toc" aria-label="Contents">
+        <a href="#start"><span lang="ko">빠른 시작</span><span lang="en">Quick start</span></a>
+        <a href="#viewer"><span lang="ko">악보 보기</span><span lang="en">Reading</span></a>
+        <a href="#modes"><span lang="ko">연습 모드</span><span lang="en">Practice modes</span></a>
+        <a href="#setlists"><span lang="ko">세트리스트</span><span lang="en">Setlists</span></a>
+        <a href="#photos"><span lang="ko">사진·스캔</span><span lang="en">Photos and scans</span></a>
+        <a href="#songform"><span lang="ko">Song Form 편집</span><span lang="en">Song Form editor</span></a>
+        <a href="#practice"><span lang="ko">연습 화면</span><span lang="en">Practice screen</span></a>
+        <a href="#notes"><span lang="ko">필기</span><span lang="en">Notes</span></a>
+        <a href="#metronome"><span lang="ko">메트로놈·튜너</span><span lang="en">Metronome and tuner</span></a>
+        <a href="#more"><span lang="ko">그 밖의 기능</span><span lang="en">More</span></a>
+        <a href="#recordings"><span lang="ko">녹음</span><span lang="en">Recordings</span></a>
+        <a href="#midi"><span lang="ko">허밍 → MIDI</span><span lang="en">Hum to MIDI</span></a>
+        <a href="#faq"><span lang="ko">자주 묻는 질문</span><span lang="en">FAQ</span></a>
+      </nav>
+    </div>
+    <figure class="phone">
+      <div class="screen">
+        <video class="clip" muted loop playsinline preload="metadata" width="540" height="1200" poster="media/clip-practice.webp">
+          <source src="media/clip-practice.mp4" type="video/mp4">
+        </video>
+        <button type="button" class="clip-btn"><span class="ic i-pause"></span></button>
+      </div>
+      <figcaption>
+        <span lang="ko">쇼팽 에튀드 Op.10 No.12 · <span class="tempo-mark">♩ = 160</span> · 11마디부터: 카운트인이 끝나면 막대가 비켜나고, 지금 마디가 박마다 채워지다가 14마디가 끝나면 2쪽으로 넘어갑니다.</span>
+        <span lang="en">Chopin, Étude Op.10 No.12 · <span class="tempo-mark">♩ = 160</span> · From bar 11: after the count-in the bars make way, the bar being played fills beat by beat, and page 2 appears as bar 14 ends.</span>
+      </figcaption>
+    </figure>
+  </section>
+
+  <section id="tabs">
+    <div class="sec-head">
+      <h2><span lang="ko">아래 탭</span><span lang="en">The tabs</span></h2>
+      <p class="sec-intro" lang="ko">화면 아래 탭으로 이동해요. 앱은 가운데 <b class="ui">Library</b> 탭에서 열리고, 악보 보기와 자동 넘김은 모두 여기서 시작합니다.</p>
+      <p class="sec-intro" lang="en">Switch with the tabs along the bottom. The app opens on <b class="ui">Library</b> in the middle, where reading and hands-free page turning start.</p>
+    </div>
+    <div class="tabs">
+      <img class="tabbar" src="media/tabbar.webp" width="720" height="97" alt="앱 하단의 Metronome, Library, Recordings 탭, Library가 선택됨" data-alt-en="The Metronome, Library and Recordings tabs at the bottom of the app, Library selected">
+      <div class="tab-cols">
+        <div><b class="ui">Metronome</b><p lang="ko">악보 없이 바로 쓰는 메트로놈과 튜너</p><p lang="en">A metronome and a tuner, no score needed</p></div>
+        <div><b class="ui">Library</b><p lang="ko">악보 · 세트리스트 · 연습 · 필기</p><p lang="en">Your scores, setlists, practice and notes</p></div>
+        <div><b class="ui">Recordings</b><p lang="ko">연습 녹음 · 허밍을 MIDI로</p><p lang="en">Record practice, turn humming into MIDI</p></div>
+        <div><b class="ui">Settings</b><p lang="ko">페이지 넘김 방식 · 얼굴 제스처 · 여백 자르기 · 사용법. 화면을 옮기지 않고 오른쪽에서 잠깐 나와요</p><p lang="en">How pages turn, face gestures, margin trimming, this guide. It slides in from the right over whatever's showing</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="start">
+    <div class="sec-head">
+      <p class="eyebrow">Library</p>
+      <h2><span lang="ko">빠른 시작: 첫 곡 준비하기</span><span lang="en">Quick start: your first song</span></h2>
+      <p class="sec-intro" lang="ko">네 단계면 페이지가 저절로 넘어가는 연습을 시작할 수 있어요.</p>
+      <p class="sec-intro" lang="en">Four steps to practice with pages that turn themselves.</p>
+    </div>
+    <ol class="steps">
+      <li class="step">
+        <div class="step-text">
+          <span class="mark" aria-hidden="true">1</span>
+          <h3><span lang="ko">악보 가져오기</span><span lang="en">Bring in your sheet music</span></h3>
+          <p lang="ko"><b class="ui p">Add Sheet</b>를 누르고 <b class="ui">PDF from Files</b>에서 기기에 있는 PDF를 고르세요. 여러 개를 한 번에 가져올 수 있어요. 종이 악보라면 <b class="ui">Photos</b>나 <b class="ui">Scan with Camera</b>로 사진을 악보로 만들 수 있어요(<a href="#photos">아래</a> 참고).</p>
+          <p lang="en">Tap <b class="ui p">Add Sheet</b>, then <b class="ui">PDF from Files</b>, and choose PDFs from your device; you can pick several at once. For a paper score, <b class="ui">Photos</b> or <b class="ui">Scan with Camera</b> makes one from pictures of its pages (<a href="#photos">see below</a>).</p>
+          <p lang="ko">가져오는 동안 앱이 악보를 읽어 페이지별 마디 수와 도돌이표를 찾아 둡니다. 버튼에 <b class="ui">Reading page 1 of 3…</b>처럼 진행 상황이 보이고, 한 쪽에 1초쯤 걸려요.</p>
+          <p lang="en">While it imports, MusicTools reads the score to count the bars on each page and find the repeats. The button shows how far it is, like <b class="ui">Reading page 1 of 3…</b>, at about a second a page.</p>
+          <ol class="legend">
+            <li data-pin="1"><span class="n">1</span><span><span lang="ko">Add Sheet: PDF · 사진 · 스캔</span><span lang="en">Add Sheet: a PDF, photos or a scan</span></span></li>
+            <li data-pin="2"><span class="n">2</span><span><span lang="ko">곡을 누르면 악보가 열려요</span><span lang="en">Tap a song to open its score</span></span></li>
+            <li data-pin="3"><span class="n">3</span><span><span lang="ko"><span class="ic i-pencil"></span> 필기 · <span class="ic i-dots"></span> 세트리스트에 넣기, PDF 공유, 이름 변경, 폴더 이동, 페이지 정리, 삭제</span><span lang="en"><span class="ic i-pencil"></span> Write on it · <span class="ic i-dots"></span> Add to a setlist, share the PDF, rename, move, pages, delete</span></span></li>
+            <li data-pin="4"><span class="n">4</span><span><span lang="ko">Songs · Setlists: 곡 목록과 <a href="#setlists">세트리스트</a></span><span lang="en">Songs · <a href="#setlists">Setlists</a></span></span></li>
+            <li data-pin="5"><span class="n">5</span><span><span lang="ko">곡 이름으로 찾기</span><span lang="en">Search by title</span></span></li>
+            <li data-pin="6"><span class="n">6</span><span><span lang="ko">Recent: 최근에 연 곡</span><span lang="en">Recent: the songs you opened last</span></span></li>
+            <li data-pin="7"><span class="n">7</span><span><span lang="ko">폴더 만들기</span><span lang="en">New folder</span></span></li>
+            <li data-pin="8"><span class="n">8</span><span><span lang="ko"><span class="ic i-dots"></span> 라이브러리 백업 · 복원</span><span lang="en"><span class="ic i-dots"></span> Back up or restore the library</span></span></li>
+          </ol>
+        </div>
+        <figure class="phone">
+          <div class="screen"><img src="media/library.webp" width="720" height="1520" loading="lazy" alt="Library 탭: Songs와 Setlists, 검색, 최근 연 곡, 폴더별 곡 목록과 아래쪽 Add Sheet 버튼" data-alt-en="Library tab: Songs and Setlists, search, recent songs, songs in folders, and the Add Sheet button at the bottom"></div>
+          <span class="pin" data-n="1" style="--x:50%;--y:86.4%">1</span>
+          <span class="pin" data-n="2" style="--x:42.1%;--y:40.2%">2</span>
+          <span class="pin" data-n="3" style="--x:82.9%;--y:41.4%">3</span>
+          <span class="pin" data-n="4" style="--x:72.7%;--y:10.4%">4</span>
+          <span class="pin" data-n="5" style="--x:49.7%;--y:16.4%">5</span>
+          <span class="pin" data-n="6" style="--x:39.5%;--y:21.8%">6</span>
+          <span class="pin" data-n="7" style="--x:70.6%;--y:3.5%">7</span>
+          <span class="pin" data-n="8" style="--x:90.9%;--y:3.5%">8</span>
+        </figure>
+      </li>
+
+      <li class="step">
+        <div class="step-text">
+          <span class="mark" aria-hidden="true">2</span>
+          <h3><span lang="ko">악보 열기</span><span lang="en">Open the score</span></h3>
+          <p lang="ko">곡을 누르면 악보가 화면 가득 열려요. 둘레의 흰 여백은 잘라 내서 음표가 더 크게 보입니다. 가운데를 누르면 위아래 막대가 나타나고, 한 번 더 누르면 사라져요. 화면 왼쪽이나 오른쪽을 누르거나 옆으로 밀면 한 쪽씩 넘어갑니다.</p>
+          <p lang="en">Tap a song and its score fills the screen, the white margins trimmed so the notes come out larger. A tap in the middle brings up the bars at the top and bottom, and another puts them away. Tap the left or right of the screen, or swipe, to turn one page.</p>
+          <ol class="legend">
+            <li data-pin="1"><span class="n">1</span><span><span lang="ko">라이브러리로</span><span lang="en">Back to the Library</span></span></li>
+            <li data-pin="2"><span class="n">2</span><span><span lang="ko">Practice: 연습 시작 (4단계)</span><span lang="en">Practice: start practicing (step 4)</span></span></li>
+            <li data-pin="3"><span class="n">3</span><span><span lang="ko"><span class="ic i-dots"></span> 필기, Song Form, 메트로놈, 세트리스트, 페이지 정리 등 (<a href="#more">아래</a>). 태블릿은 대부분 위 막대에 바로 보여요</span><span lang="en"><span class="ic i-dots"></span> The editor, the Song Form, the metronome, setlists, pages and more (<a href="#more">below</a>). On a tablet most are right in the top bar</span></span></li>
+            <li data-pin="4"><span class="n">4</span><span><span lang="ko">가운데: 막대 보이기 · 숨기기</span><span lang="en">The middle: show or hide the bars</span></span></li>
+            <li data-pin="5"><span class="n">5</span><span><span lang="ko">양옆: 한 쪽씩 넘기기</span><span lang="en">Either side: turn one page</span></span></li>
+            <li data-pin="6"><span class="n">6</span><span><span lang="ko">진행 바: 원하는 쪽으로</span><span lang="en">Seek bar: go to any page</span></span></li>
+            <li data-pin="7"><span class="n">7</span><span><span lang="ko">박 표시: 메트로놈이 돌면 박마다 켜져요</span><span lang="en">Beats: they light up as the metronome plays</span></span></li>
+            <li data-pin="8"><span class="n">8</span><span><span lang="ko">템포 · 박자: 누르면 메트로놈 설정 (3단계)</span><span lang="en">Tempo and meter: tap for the metronome (step 3)</span></span></li>
+            <li data-pin="9"><span class="n">9</span><span><span lang="ko">메트로놈 시작 · 정지</span><span lang="en">Start or stop the metronome</span></span></li>
+          </ol>
+        </div>
+        <figure class="phone">
+          <div class="screen"><img src="media/viewer.webp" width="720" height="1520" loading="lazy" alt="악보 화면: 화면 가득한 악보 위에, 위쪽에 뒤로, 곡 이름, Practice, 더 보기 버튼, 아래쪽에 쪽 진행 바, 박 표시, 템포, 재생 버튼" data-alt-en="The viewer: the score fills the screen, with back, the title, Practice and More along the top, and the page seek bar, beats, tempo and play along the bottom"></div>
+          <span class="pin" data-n="1" style="--x:8.3%;--y:3.6%">1</span>
+          <span class="pin" data-n="2" style="--x:71.5%;--y:3.6%">2</span>
+          <span class="pin" data-n="3" style="--x:91.8%;--y:3.6%">3</span>
+          <span class="pin" data-n="4" style="--x:50%;--y:51.8%">4</span>
+          <span class="pin" data-n="5" style="--x:5.6%;--y:51.8%">5</span>
+          <span class="pin" data-n="6" style="--x:55.6%;--y:89.8%">6</span>
+          <span class="pin" data-n="7" style="--x:25.9%;--y:95.8%">7</span>
+          <span class="pin" data-n="8" style="--x:67.9%;--y:95.8%">8</span>
+          <span class="pin" data-n="9" style="--x:90.8%;--y:95.8%">9</span>
+        </figure>
+      </li>
+
+      <li class="step">
+        <div class="step-text">
+          <span class="mark" aria-hidden="true">3</span>
+          <h3><span lang="ko">템포와 박자 맞추기</span><span lang="en">Set the tempo and time signature</span></h3>
+          <p lang="ko">아래 막대의 템포(<span class="tempo-mark">♩ = 70 · 4/4</span>)를 누르면 이 곡의 메트로놈 설정이 열려요. 템포와 박자는 악보에서 읽어 오지 않아서 처음에는 <span class="tempo-mark">♩ = 100</span>, 4/4로 들어 있으니 곡의 처음에 맞게 꼭 바꿔 주세요. 페이지가 넘어가는 시점이 이 값으로 정해집니다. 곡 중간에 바뀌는 곳은 Song Form 편집 화면에서 그 마디에 표시해요. 설정은 곡마다 자동으로 저장돼요.</p>
+          <p lang="en">Tap the tempo in the bottom bar (<span class="tempo-mark">♩ = 70 · 4/4</span>) to open this song's metronome. Neither the tempo nor the meter is read from the score, so they start at <span class="tempo-mark">♩ = 100</span> in 4/4: change them to match the start of the piece. Page turns are timed from these. Where they change partway through, mark it on that bar in the Song Form editor. Each song keeps its own, saved as you go.</p>
+          <p lang="ko">템포를 누르면 숫자와 함께 기준 음표(<b class="ui">Counted in</b>)도 고를 수 있어요. 악보에 <span class="tempo-mark">♩. = 60</span>이라고 적혀 있으면 점4분음표를 고르고 60을 넣으면 됩니다.</p>
+          <p lang="en">Tap the tempo to pick the number and the note it counts (<b class="ui">Counted in</b>). If the score says <span class="tempo-mark">♩. = 60</span>, choose the dotted quarter and enter 60.</p>
+          <ol class="legend">
+            <li data-pin="1"><span class="n">1</span><span><span lang="ko">박 표시: 누를 때마다 보통 → 소리 없음 → 높은 소리 → 낮은 소리</span><span lang="en">Beats: tap to cycle normal → silent → high → low</span></span></li>
+            <li data-pin="2"><span class="n">2</span><span><span lang="ko">템포: 눌러서 숫자와 기준 음표 고르기</span><span lang="en">Tempo: tap to pick the number and the note it counts</span></span></li>
+            <li data-pin="3"><span class="n">3</span><span><span lang="ko">TAP: 박자에 맞춰 두드리면 템포가 입력돼요</span><span lang="en">TAP: tap along to set the tempo</span></span></li>
+            <li data-pin="4"><span class="n">4</span><span><span lang="ko">박자표 (없는 박자와 3+2+2 같은 묶음은 <span class="ic i-dots"></span>에서)</span><span lang="en">Time signature (<span class="ic i-dots"></span> for others, and for groups like 3+2+2)</span></span></li>
+            <li data-pin="5"><span class="n">5</span><span><span lang="ko">한 박에 치는 횟수</span><span lang="en">Clicks per beat</span></span></li>
+            <li data-pin="6"><span class="n">6</span><span><span lang="ko">소리</span><span lang="en">Sound</span></span></li>
+            <li data-pin="7"><span class="n">7</span><span><span lang="ko">Start: 악보를 보며 메트로놈만 켜기 (Simple 연습)</span><span lang="en">Start: the metronome over the score (Simple practice)</span></span></li>
+          </ol>
+        </div>
+        <figure class="phone">
+          <div class="screen"><img src="media/metronome-panel.webp" width="720" height="1167" loading="lazy" alt="악보 화면 아래에서 올라온 메트로놈 설정: 박 표시, 템포 ♩ = 70, TAP, 박자표, 한 박 클릭 수, 소리, Start" data-alt-en="The metronome settings up from the bottom of the viewer: beats, tempo ♩ = 70, TAP, time signature, clicks per beat, sound and Start"></div>
+          <span class="pin" data-n="1" style="--x:50%;--y:14.6%">1</span>
+          <span class="pin" data-n="2" style="--x:40.6%;--y:25.3%">2</span>
+          <span class="pin" data-n="3" style="--x:83.8%;--y:25.3%">3</span>
+          <span class="pin" data-n="4" style="--x:35.2%;--y:52.9%">4</span>
+          <span class="pin" data-n="5" style="--x:50%;--y:68.5%">5</span>
+          <span class="pin" data-n="6" style="--x:50%;--y:83.7%">6</span>
+          <span class="pin" data-n="7" style="--x:50%;--y:94.2%">7</span>
+        </figure>
+      </li>
+
+      <li class="step">
+        <div class="step-text">
+          <span class="mark" aria-hidden="true">4</span>
+          <h3><span lang="ko">연습 시작</span><span lang="en">Start practicing</span></h3>
+          <p lang="ko">위 막대의 <b class="ui p">Practice</b>에서 <b class="ui">Auto page turn</b>을 고르고, 연습 화면에서 <b class="ui p">Start</b>를 누르세요. 곡의 박자와 템포로 한두 마디를 세는 카운트인 뒤 메트로놈과 함께 시작하고, 막대는 비켜나 악보만 남아요. 지금 연주하는 마디가 악보 위에 표시되고, 페이지의 마지막 마디가 끝나면 다음 페이지로 넘어갑니다.</p>
+          <p lang="en">Tap <b class="ui p">Practice</b> in the top bar, choose <b class="ui">Auto page turn</b>, then tap <b class="ui p">Start</b>. After a count-in of a bar or two at the song's own meter and tempo the metronome starts, and the bars make way for the score. The bar you're playing is marked on it, and each page turns when its last bar ends.</p>
+          <div class="callout">
+            <span class="ic i-alert"></span>
+            <p lang="ko"><b class="ui">Auto page turn</b> 아래에 이 곡의 Song Form이 요약돼 있어요(몇 쪽, 몇 마디, 걸리는 시간). 자동으로 읽지 못한 곡은 Song Form을 만들자고 안내하니, 편집 화면에서 마디를 넣어 주세요(<a href="#songform">아래</a> 참고).</p>
+            <p lang="en">Under <b class="ui">Auto page turn</b> the song's Song Form is summed up: pages, bars and how long it takes. A song that couldn't be read offers to set its Song Form up instead; add its bars in the editor (<a href="#songform">see below</a>).</p>
+          </div>
+        </div>
+        <div class="pair">
+          <figure class="phone">
+            <div class="screen"><img src="media/practice-start.webp" width="540" height="1140" loading="lazy" alt="Auto page turn 화면: 첫 마디에 상자, 악보 위의 표시, 아래에 PAGE, BAR, BEAT, 템포와 Start, Reset 버튼" data-alt-en="Auto page turn: a box on the first bar, marks on the score, PAGE, BAR, BEAT and tempo, with Start and Reset at the bottom"><span class="pin" data-n="1" style="--x:36.1%;--y:96.2%">1</span></div>
+            <figcaption><span lang="ko">1 · Start</span><span lang="en">1 · Start</span></figcaption>
+          </figure>
+          <figure class="phone">
+            <div class="screen"><img src="media/practice-countdown.webp" width="540" height="1140" loading="lazy" alt="카운트인 화면: 남은 박을 세는 큰 숫자" data-alt-en="The count-in: a big number counting down the beats"></div>
+            <figcaption><span lang="ko">카운트인 (누르면 취소)</span><span lang="en">The count-in (tap to cancel)</span></figcaption>
+          </figure>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section id="viewer">
+    <div class="sec-head">
+      <p class="eyebrow" lang="ko">Library → 곡</p>
+      <p class="eyebrow" lang="en">Library → a song</p>
+      <h2><span lang="ko">악보 보기</span><span lang="en">Reading the score</span><span class="badge"><span lang="ko">새 기능</span><span lang="en">NEW</span></span></h2>
+      <p class="sec-intro" lang="ko">곡을 누르면 열리는 화면이에요. 악보가 화면을 다 쓰고, 막대는 필요할 때만 위에 올라와요. 곡은 마지막으로 본 쪽에서 다시 열리고, 악보를 보는 동안에는 화면이 꺼지지 않아요.</p>
+      <p class="sec-intro" lang="en">What opens when you tap a song. The score has the whole screen, and the bars come over it only when you want them. A song opens on the page you left it on, and the screen stays on while you read.</p>
+    </div>
+    <figure class="phone wide">
+      <div class="screen"><img src="media/tablet-viewer.webp" width="1280" height="900" loading="lazy" alt="가로로 놓은 태블릿의 악보 화면: 두 쪽이 나란히, 위 막대에 Library, 곡 이름, Edit, Song Form, Metronome, Practice, 아래 막대에 쪽 진행 바와 메트로놈" data-alt-en="The viewer on a tablet in landscape: two pages side by side, with Library, the title, Edit, Song Form, Metronome and Practice in the top bar, and the page seek bar and the metronome in the bottom one"></div>
+      <figcaption><span lang="ko">가로로 놓은 태블릿: 두 쪽을 펼친 책처럼 나란히 보여 주고, 위 막대에 Edit · Song Form · Metronome · Practice가 바로 있어요.</span><span lang="en">A tablet in landscape: two pages side by side like an open book, with Edit, Song Form, Metronome and Practice right in the top bar.</span></figcaption>
+    </figure>
+    <ul class="tips wide-tips">
+      <li><span class="ic i-info"></span><span><span lang="ko">흰 여백을 잘라 음표를 크게 보여 줘요. 인쇄된 그대로 보려면 <b class="ui">Settings</b>(위 막대의 톱니바퀴, 휴대폰은 <span class="ic i-dots"></span> 안)에서 <b class="ui">Trim Page Margins</b>를 끄세요(모든 곡에 같이 적용).</span><span lang="en">The white margins are trimmed so the notes come out larger. To see pages as printed, turn off <b class="ui">Trim Page Margins</b> in <b class="ui">Settings</b> (the gear on the top bar; on a phone, under <span class="ic i-dots"></span>). It's for every song.</span></span></li>
+      <li><span class="ic i-info"></span><span><span lang="ko"><b class="ui">Settings</b> → <b class="ui">Turn by</b>를 <b class="ui">Half Page</b>로 바꾸면 반 페이지씩 넘겨요. 한 번 넘기면 다음 쪽 윗부분만 위에 들어오고, 연주 중인 아랫부분은 움직이지 않아요. 한 번 더 넘기면 나머지가 바뀌어요. 악보 줄 사이에서 나누고, 한 쪽씩 보일 때(세로 화면)만 동작해요.</span><span lang="en">Set <b class="ui">Turn by</b> in <b class="ui">Settings</b> to <b class="ui">Half Page</b> to turn half a page at a time. One turn brings in only the top of the next page, and the part you're playing stays still; the next turn changes the rest. Pages are divided between lines of music, and this works where one page shows at a time (a tablet held upright).</span></span></li>
+      <li><span class="ic i-info"></span><span><span lang="ko"><b class="ui">Settings</b> → <b class="ui">Follow Song Form</b>을 켜면 Song Form이 있는 곡은 연주 순서대로 넘어가요. 도돌이표가 나오면 앞 쪽으로 돌아가고, 잠깐 "Back to page 2 (repeat)"처럼 알려 줘요. Half Page와 함께 쓰면 돌아갈 줄이 화면 맨 위에 오고, 한 번 더 넘기면 그 쪽의 나머지가 그 아래에 나타나요.</span><span lang="en">Turn on <b class="ui">Follow Song Form</b> in <b class="ui">Settings</b> and a song with a Song Form turns in the order it's played: back for a repeat, with a word on screen such as "Back to page 2 (repeat)". With Half Page, the line you're going back to comes in at the top of the screen, and the next turn shows the rest of that page below it.</span></span></li>
+      <li><span class="ic i-eye"></span><span><span lang="ko">필기가 있는 곡은 <b class="ui">Notes</b>(휴대폰은 <span class="ic i-dots"></span> → <b class="ui">Hide Notes</b>)로 필기를 감추고 원래 악보만 볼 수 있어요.</span><span lang="en">A song with notes can hide them with <b class="ui">Notes</b> (on a phone, <span class="ic i-dots"></span> → <b class="ui">Hide Notes</b>) for a clean page.</span></span></li>
+      <li><span class="ic i-info"></span><span><span lang="ko">블루투스 페이지 넘김 페달(키보드처럼 연결되는 것)로도 넘겨요. → ↓ Page Down 스페이스는 다음 쪽, ← ↑ Page Up은 앞 쪽이에요.</span><span lang="en">A Bluetooth page-turn pedal (one that connects as a keyboard) turns the pages too: → ↓ Page Down or space for the next, ← ↑ Page Up for the one before.</span></span></li>
+      <li><span class="ic i-info"></span><span><span lang="ko">진행 바를 끌면 쪽 번호가 따라 바뀌고, 놓으면 그 쪽으로 가요. 세트리스트에서 연 곡은 마지막 쪽에서 한 번 더 넘기면 다음 곡으로 이어져요.</span><span lang="en">Drag the seek bar and the page number follows; let go to go there. A song opened from a setlist goes on to the next one when you turn past its last page.</span></span></li>
+    </ul>
+  </section>
+
+  <section id="modes">
+    <div class="sec-head">
+      <p class="eyebrow" lang="ko">악보 화면 → Practice</p>
+      <p class="eyebrow" lang="en">The viewer → Practice</p>
+      <h2><span lang="ko">연습 모드 두 가지</span><span lang="en">Two ways to practice</span></h2>
+    </div>
+    <figure class="phone menu-shot">
+      <div class="screen"><img src="media/practice-menu.webp" width="720" height="530" loading="lazy" alt="Practice 메뉴: Simple(메트로놈만, 페이지는 직접)과 Auto page turn(페이지가 박자에 맞춰 저절로, 1 page, 31 bars played, about 1:21)" data-alt-en="The Practice menu: Simple (the metronome only, you turn the pages) and Auto page turn (the pages turn by themselves, in time; 1 page, 31 bars played, about 1:21)"></div>
+      <span class="pin" data-n="1" style="--x:9.6%;--y:30.6%">1</span>
+      <span class="pin" data-n="2" style="--x:9.6%;--y:59.8%">2</span>
+    </figure>
+    <div class="modes">
+      <div class="mode">
+        <div class="mode-top"><span class="seg"><span class="n-inline">1</span> Simple</span><span class="turns"><span lang="ko">페이지 넘김: 손으로</span><span lang="en">Pages: by hand</span></span></div>
+        <ul lang="ko">
+          <li>악보 화면 그대로 메트로놈만 켜져요. 아래 막대의 ▶와 같아요.</li>
+          <li>화면 왼쪽·오른쪽을 누르거나 밀어서, 또는 페달로 한 쪽씩 넘겨요.</li>
+          <li>따로 설정할 것 없이 바로 시작해요.</li>
+        </ul>
+        <ul lang="en">
+          <li>The viewer with its metronome on: the same as ▶ in the bottom bar.</li>
+          <li>Tap the left or right of the screen, swipe, or use a pedal to turn a page.</li>
+          <li>Nothing to set up.</li>
+        </ul>
+      </div>
+      <div class="mode song">
+        <div class="mode-top"><span class="seg"><span class="n-inline">2</span> Auto page turn</span><span class="turns"><span lang="ko">페이지 넘김: 자동</span><span lang="en">Pages: automatic</span></span></div>
+        <ul lang="ko">
+          <li>악보에 표시한 마디와 도돌이표·D.C.·D.S.대로, 박자에 맞춰 페이지가 넘어가요.</li>
+          <li>지금 연주하는 마디가 악보 위에 표시돼요.</li>
+          <li>곡 중간의 템포·박자 변화, rit.·accel., 늘임표, 못갖춘마디까지 따라가요.</li>
+          <li>진행 바로 원하는 마디부터 다시 연습해요.</li>
+          <li>곡의 Song Form으로 움직여요. 가져올 때 자동으로 만들어지고, 편집 화면에서 고쳐요.</li>
+        </ul>
+        <ul lang="en">
+          <li>Pages turn in time, following the bars and the repeats, D.C. and D.S. marked on the score.</li>
+          <li>The bar you're playing is marked on the score.</li>
+          <li>Changes of tempo or meter, rit. and accel., fermatas and pickups are all followed.</li>
+          <li>Jump back to any bar with the seek bar.</li>
+          <li>It runs on the song's Song Form, made for you at import and put right in the editor.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="setlists">
+    <div class="sec-head">
+      <p class="eyebrow">Library → Setlists</p>
+      <h2><span lang="ko">세트리스트</span><span lang="en">Setlists</span><span class="badge"><span lang="ko">새 기능</span><span lang="en">NEW</span></span></h2>
+      <p class="sec-intro" lang="ko">연주하는 순서대로 곡을 묶어 두는 목록이에요. 매일 하는 연습 루틴, 연주회 프로그램, 주일 예배곡처럼요. 한 곡을 여러 세트리스트에 넣을 수 있어요.</p>
+      <p class="sec-intro" lang="en">Songs in the order you play them: your daily practice routine, a concert program, Sunday's songs. A song can be in any number of setlists.</p>
+    </div>
+    <div class="feature wide-left">
+      <div class="pair">
+        <figure class="phone">
+          <div class="screen"><img src="media/setlist.webp" width="540" height="1140" loading="lazy" alt="세트리스트 Recital을 편집하는 화면: 곡 세 개, 왼쪽에 빼기 버튼, 오른쪽에 순서를 바꾸는 손잡이, 아래에 Add Songs" data-alt-en="Editing the setlist Recital: three songs, a remove button on the left of each and a handle on the right to reorder, and Add Songs at the bottom"></div>
+          <figcaption><span lang="ko">Edit: 손잡이로 순서 바꾸기, ⊖로 빼기</span><span lang="en">Edit: reorder by the handles, ⊖ to take out</span></figcaption>
+        </figure>
+        <figure class="phone">
+          <div class="screen"><img src="media/setlist-viewer.webp" width="540" height="1140" loading="lazy" alt="세트리스트에서 연 악보: 위에 RECITAL · 1/3과 곡 이름" data-alt-en="A score opened from a setlist: RECITAL · 1/3 above the title"></div>
+          <figcaption><span lang="ko">세트리스트에서 연 악보</span><span lang="en">Opened from the setlist</span></figcaption>
+        </figure>
+      </div>
+      <div class="aside">
+        <ol class="howto">
+          <li><span lang="ko">Library → <b class="ui">Setlists</b> → <b class="ui p">New Setlist</b>로 이름을 정하고, <b class="ui">Add Songs</b>로 곡을 고르세요. 곡의 <span class="ic i-dots"></span> → <b class="ui">Add to Setlist</b>로도 넣을 수 있어요.</span><span lang="en">Library → <b class="ui">Setlists</b> → <b class="ui p">New Setlist</b>, name it, and pick its songs with <b class="ui">Add Songs</b>. A song's <span class="ic i-dots"></span> → <b class="ui">Add to Setlist</b> works too.</span></li>
+          <li><span lang="ko"><b class="ui">Edit</b>을 누르면 손잡이(=)를 끌어 순서를 바꾸고, ⊖로 곡을 뺄 수 있어요. 곡 자체는 라이브러리에 그대로 있어요.</span><span lang="en"><b class="ui">Edit</b>: drag the handles (=) to reorder, ⊖ to take a song out. The song itself stays in the Library.</span></li>
+          <li><span lang="ko">곡이나 <b class="ui p">Play from the Start</b>를 누르면 악보가 열리고, 위에 "세트리스트 이름 · 1/3"이 보여요. 그 줄을 누르면 곡 목록에서 바로 옮겨 가요.</span><span lang="en">Tap a song, or <b class="ui p">Play from the Start</b>: the score opens with "SETLIST · 1/3" above it. Tap that line for the list of songs.</span></li>
+          <li><span lang="ko">마지막 쪽에서 한 번 더 넘기면 다음 곡이 열려요. 앞뒤 곡은 ⏮ ⏭(휴대폰은 <span class="ic i-dots"></span> → <b class="ui">Previous Song</b> · <b class="ui">Next Song</b>)으로도 가요.</span><span lang="en">Turn past the last page and the next song opens. ⏮ ⏭ (on a phone, <span class="ic i-dots"></span> → <b class="ui">Previous Song</b> or <b class="ui">Next Song</b>) go back and forth too.</span></li>
+        </ol>
+        <ul class="tips">
+          <li><span class="ic i-play"></span><span><span lang="ko">세트리스트의 곡을 Auto page turn으로 연습하다 곡이 끝나면 아래에 <b class="ui">Next: 다음 곡</b>이 나와요. 누르면 다음 곡이 같은 방식으로 이어집니다.</span><span lang="en">When Auto page turn reaches the end of a song in a setlist, <b class="ui">Next: the next song</b> appears at the bottom; tap it to carry on the same way.</span></span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="photos">
+    <div class="sec-head">
+      <p class="eyebrow">Library → Add Sheet</p>
+      <h2><span lang="ko">사진·스캔으로 악보 만들기</span><span lang="en">Scores from photos and scans</span><span class="badge"><span lang="ko">새 기능</span><span lang="en">NEW</span></span></h2>
+      <p class="sec-intro" lang="ko">종이 악보도 찍어서 쓸 수 있어요. 사진은 기기 안에서 오선을 따라 반듯하게 펴지고, 모든 쪽이 같은 크기에 오선 크기와 시작 위치까지 맞춰진 악보 페이지가 돼요. 그래서 페이지를 넘겨도 악보가 같은 자리에 있어요.</p>
+      <p class="sec-intro" lang="en">Paper scores work too: on your device, each photo is straightened by its staves, and every page comes out the same size with the music the same size and in the same place, so nothing jumps as the pages turn.</p>
+    </div>
+    <div class="feature">
+      <figure class="phone">
+        <div class="screen"><img src="media/add-sheet.webp" width="720" height="1520" loading="lazy" alt="Add Sheet 메뉴: PDF from Files, Photos, Scan with Camera" data-alt-en="The Add Sheet menu: PDF from Files, Photos and Scan with Camera"></div>
+        <span class="pin" data-n="1" style="--x:13.9%;--y:37.2%">1</span>
+        <span class="pin" data-n="2" style="--x:13.9%;--y:46.3%">2</span>
+        <span class="pin" data-n="3" style="--x:13.9%;--y:55.4%">3</span>
+      </figure>
+      <div class="aside">
+        <ol class="legend">
+          <li data-pin="1"><span class="n">1</span><span><span lang="ko">PDF from Files: 파일, 드라이브, 다운로드의 PDF</span><span lang="en">PDF from Files: from Files, a drive, a download</span></span></li>
+          <li data-pin="2"><span class="n">2</span><span><span lang="ko">Photos: 사진 앱에서 고른 악보 사진</span><span lang="en">Photos: pictures of the pages from your photo library</span></span></li>
+          <li data-pin="3"><span class="n">3</span><span><span lang="ko">Scan with Camera: 카메라로 찍으면 페이지를 찾아 반듯하게 펴 줘요</span><span lang="en">Scan with Camera: photograph the pages, and they're found and straightened for you</span></span></li>
+        </ol>
+        <ol class="howto">
+          <li><span lang="ko"><b class="ui">Photos</b>로 사진을 고르면 <b class="ui">New Sheet</b> 화면이 열려요. 사진은 들어오면서 저절로 펴져요. 옆으로 찍은 사진은 세워지고, 기울거나 책처럼 휜 악보는 오선을 따라 반듯해지고, 그림자는 걷혀요. 쪽마다 어떻게 됐는지 이름 아래에 적혀 있어요.</span><span lang="en"><b class="ui">Photos</b> opens <b class="ui">New Sheet</b>, and each photo is straightened as it comes in: one taken sideways is turned upright, a page shot at a slant or curving like a book's is flattened by its staves, and shadows are evened out. Each page says what was done to it.</span></li>
+          <li><span lang="ko">옆 페이지처럼 악보가 아닌 것까지 찍혔다면 모서리 버튼으로 네 모서리를 악보 페이지의 모서리에 맞추고 <b class="ui p">Done</b>을 누르세요. 지팡이 버튼을 끄면 그 쪽은 자동으로 펴지 않고 찍힌 그대로(모서리를 맞췄다면 그만큼 펴서) 들어가요.</span><span lang="en">If the photo takes in more than the page, such as the page beside it, use the corner button to drag the four corners onto the page's corners and tap <b class="ui p">Done</b>. Turn off a page's wand button and it goes in as photographed, straightened only by its corners if you set them.</span></li>
+          <li><span lang="ko">손잡이(=)를 끌어 쪽 순서를 맞추고, <b class="ui">Add Photos</b>나 <b class="ui">Scan Pages</b>로 더 넣은 뒤 <b class="ui p">Create</b>를 누르면 곡이 만들어지고 악보가 열려요.</span><span lang="en">Drag the handles (=) to put the pages in order, add more with <b class="ui">Add Photos</b> or <b class="ui">Scan Pages</b>, and tap <b class="ui p">Create</b>: the song is made and opens.</span></li>
+        </ol>
+        <div class="pair">
+          <figure class="phone">
+            <div class="screen"><img src="media/photo-corners.webp" width="540" height="1140" loading="lazy" alt="사진을 반듯하게 펴는 화면: 책상 위에 비스듬히 놓인 악보 사진, 네 모서리 손잡이가 페이지 모서리에 맞춰져 있음" data-alt-en="Straightening a photo: a score lying at an angle on a desk, with the four corner handles on the page's corners"></div>
+            <figcaption><span lang="ko">모서리를 페이지 모서리에</span><span lang="en">Corners onto the page's corners</span></figcaption>
+          </figure>
+          <figure class="phone">
+            <div class="screen"><img src="media/photo-pages.webp" width="540" height="1140" loading="lazy" alt="New Sheet 화면: 이름, 반듯하게 편 두 쪽과 쪽마다 돌리기, 펴기, 빼기 버튼과 손잡이, Add Photos와 Scan Pages" data-alt-en="New Sheet: the name, two straightened pages each with turn, straighten, take out and a handle, and Add Photos and Scan Pages"></div>
+            <figcaption><span lang="ko">쪽 순서 · 돌리기 · 빼기</span><span lang="en">Order, turn, take out</span></figcaption>
+          </figure>
+        </div>
+        <ul class="tips">
+          <li><span class="ic i-info"></span><span><span lang="ko">위에서 내려다보고 밝은 곳에서 찍을수록 잘 펴져요. 사진으로 만든 곡은 마디를 미리 읽어 두지 않아요. Song Form 편집 화면을 열면 읽어 들이니, 확인하고 고쳐 주세요.</span><span lang="en">Shot from above in good light straightens best. A song made from photos doesn't have its bars read in advance: open the Song Form editor and it reads them, for you to check and correct.</span></span></li>
+          <li><span class="ic i-share"></span><span><span lang="ko">다른 앱의 PDF도 바로 가져와요. 파일, 메일, 브라우저에서 PDF를 공유하거나 열 앱으로 MusicTools를 고르면 가져오고, 하나면 바로 열어 줍니다.</span><span lang="en">A PDF in another app comes straight in too: share it from Files, Mail or a browser to MusicTools, or open it with MusicTools, and it's imported (and opened, if it's just the one).</span></span></li>
+          <li><span class="ic i-info"></span><span><span lang="ko">고른 사진만 쓰고 기기 밖으로 보내지 않아요. 원래 사진은 사진 앱에 그대로 남고, 줄인 사본이 곡과 함께 앱 안에 보관돼요(백업에도 들어가요).</span><span lang="en">Only the photos you pick are used, and nothing leaves your device. The photos themselves stay in your photo library, and a smaller copy of each is kept with the song, in backups too.</span></span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="songform">
+    <div class="sec-head">
+      <p class="eyebrow" lang="ko">악보 화면 → Song Form</p>
+      <p class="eyebrow" lang="en">The viewer → Song Form</p>
+      <h2><span lang="ko">Song Form 편집</span><span lang="en">The Song Form editor</span></h2>
+      <p class="sec-intro" lang="ko">악보 위에 마디를 맞추고, 마디에 도돌이표나 템포 같은 표시를 붙이는 화면이에요. 연주 순서와 박자는 표시를 보고 앱이 계산하고, 바꾼 내용은 바로 저장돼요. 태블릿은 위 막대의 <b class="ui">Song Form</b>, 휴대폰은 <span class="ic i-dots"></span> → <b class="ui">Song Form</b>으로 열어요. 두 손가락으로 확대하고, 위의 화살표로 페이지를 옮겨요.</p>
+      <p class="sec-intro" lang="en">Here you line the bars up with the score and put marks on them, such as repeats or a tempo change. MusicTools works out the playing order and the timing from the marks, and every change saves as you make it. Open it with <b class="ui">Song Form</b> in the top bar on a tablet, or <span class="ic i-dots"></span> → <b class="ui">Song Form</b> on a phone. Zoom with two fingers; the arrows at the top change the page.</p>
+    </div>
+    <div class="feature">
+      <figure class="phone">
+        <div class="screen"><img src="media/song-form-bars.webp" width="720" height="1520" loading="lazy" alt="Song Form 편집 화면의 Bars 탭: 악보 위에 번호 붙은 마디, 새로 넣는 줄의 점선 상자, 아래에 Add bar, Remove bar, Add line, Move line, Delete line 버튼" data-alt-en="The Song Form editor's Bars tab: numbered bars on the score, the dashed box of a line being added, and Add bar, Remove bar, Add line, Move line and Delete line below"></div>
+        <span class="pin" data-n="1" style="--x:8.3%;--y:74.7%">1</span>
+        <span class="pin" data-n="2" style="--x:8.3%;--y:79.9%">2</span>
+        <span class="pin" data-n="3" style="--x:50%;--y:43.9%">3</span>
+        <span class="pin" data-n="4" style="--x:6.3%;--y:93.9%">4</span>
+        <span class="pin" data-n="5" style="--x:55.5%;--y:79.9%">5</span>
+        <span class="pin" data-n="6" style="--x:81.7%;--y:69.2%">6</span>
+        <span class="pin" data-n="7" style="--x:78.3%;--y:3.4%">7</span>
+        <span class="pin" data-n="8" style="--x:93.1%;--y:3.4%">8</span>
+      </figure>
+      <div class="aside">
+        <p class="block-title" lang="ko">Bars 탭: 마디 맞추기</p>
+        <p class="block-title" lang="en">Bars tab: lining up the bars</p>
+        <ol class="howto">
+          <li><span lang="ko">도구를 고르지 않으면 악보를 눌러도 아무것도 바뀌지 않아요. 고칠 때만 도구를 고르세요.</span><span lang="en">With no tool picked, touching the score changes nothing. Pick a tool only to make a change.</span></li>
+          <li><span lang="ko"><b class="ui">Add bar</b>를 고르고 마디선이 있어야 할 곳을 누르면 마디가 나뉘어요. <b class="ui">Remove bar</b>로 마디선 가까이를 누르면 두 마디가 합쳐져요.</span><span lang="en">With <b class="ui">Add bar</b>, tap where a barline belongs to split the bar. With <b class="ui">Remove bar</b>, tap near a barline to join the two bars.</span></li>
+          <li><span lang="ko">앱이 읽지 못한 줄은 <b class="ui">Add line</b>을 고르고 그 줄을 누르세요. 점선 상자를 끌어 맞추고 양옆과 위아래 손잡이로 크기를 맞춘 뒤, 마디 수를 정하고 <b class="ui p">Add</b>를 누릅니다.</span><span lang="en">For a line it couldn't read, pick <b class="ui">Add line</b> and tap that line. Drag the dashed box into place, size it by its sides and its top and bottom handles, set how many bars it has, and tap <b class="ui p">Add</b>.</span></li>
+          <li><span lang="ko">마디선이나 줄의 가장자리는 끌어서 옮겨요. 줄 전체를 옮기려면 <b class="ui">Move line</b>을 고르고 끌어요.</span><span lang="en">Drag a barline or a line's edge to move it. To move a whole line, pick <b class="ui">Move line</b> and drag it.</span></li>
+        </ol>
+        <ol class="legend">
+          <li data-pin="1"><span class="n">1</span><span><span lang="ko">Add bar · Remove bar: 마디선 넣기 · 빼기</span><span lang="en">Add bar · Remove bar: put in or take out a barline</span></span></li>
+          <li data-pin="2"><span class="n">2</span><span><span lang="ko">Add line: 줄(한 단) 넣기</span><span lang="en">Add line: add a line of music</span></span></li>
+          <li data-pin="3"><span class="n">3</span><span><span lang="ko">넣을 줄: 끌어서 옮기고 손잡이로 크기 맞추기</span><span lang="en">The line being added: drag it, size it by its handles</span></span></li>
+          <li data-pin="4"><span class="n">4</span><span><span lang="ko">마디 수를 정하고 Add</span><span lang="en">Set its bars, then Add</span></span></li>
+          <li data-pin="5"><span class="n">5</span><span><span lang="ko">Move line · Delete line: 줄 옮기기 · 지우기</span><span lang="en">Move line · Delete line</span></span></li>
+          <li data-pin="6"><span class="n">6</span><span><span lang="ko">Page: 이 쪽 다시 읽기 · 마디 수만 세기 · 비우기</span><span lang="en">Page: read it again, only count its bars, or clear it</span></span></li>
+          <li data-pin="7"><span class="n">7</span><span><span lang="ko">되돌리기 · 다시 실행</span><span lang="en">Undo · Redo</span></span></li>
+          <li data-pin="8"><span class="n">8</span><span><span lang="ko">Play order: 연주 순서와 걸리는 시간 (태블릿은 오른쪽에 늘 보여요)</span><span lang="en">Play order: the order and how long it takes (always beside the page on a tablet)</span></span></li>
+        </ol>
+        <ul class="tips">
+          <li><span class="ic i-info"></span><span><span lang="ko">확실하지 않게 읽은 줄은 빨갛게 보여요. 그 줄의 마디를 확인해 주세요.</span><span lang="en">A line read without confidence shows in red: check its bars.</span></span></li>
+          <li><span class="ic i-info"></span><span><span lang="ko">그릴 수 없는 PDF나 빨리 끝내고 싶은 쪽은 <b class="ui">Page</b> → <b class="ui">Only count its bars</b>로 마디 수만 넣을 수 있어요. 그 쪽에서는 지금 마디가 표시되지 않아요.</span><span lang="en">For a PDF that can't be drawn, or a page you want to set up quickly, <b class="ui">Page</b> → <b class="ui">Only count its bars</b> takes just a number of bars. The bar being played isn't marked on that page.</span></span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="feature">
+      <figure class="phone">
+        <div class="screen"><img src="media/song-form-marks.webp" width="720" height="1520" loading="lazy" alt="Song Form 편집 화면의 Marks 탭: 4번 마디가 골라져 있고, 악보 위에 Pickup 1 beat, Fermata +2 beats, rit. to 75% 표시, 아래에 표시 버튼 두 줄" data-alt-en="The Song Form editor's Marks tab: bar 4 picked, the marks Pickup 1 beat, Fermata +2 beats and rit. to 75% on the score, and two rows of mark buttons below"></div>
+        <span class="pin" data-n="1" style="--x:60.9%;--y:18.4%">1</span>
+        <span class="pin" data-n="2" style="--x:2%;--y:78.2%">2</span>
+        <span class="pin" data-n="3" style="--x:2%;--y:88.8%">3</span>
+        <span class="pin" data-n="4" style="--x:72.8%;--y:14.6%">4</span>
+        <span class="pin" data-n="5" style="--x:78.5%;--y:31.3%">5</span>
+      </figure>
+      <div class="aside">
+        <p class="block-title" lang="ko">Marks 탭: 표시 붙이기</p>
+        <p class="block-title" lang="en">Marks tab: putting marks on bars</p>
+        <ol class="howto">
+          <li><span lang="ko">마디를 누르면 그 마디가 골라지고 아래에 표시 버튼이 나와요. 여러 마디에 걸친 도돌이 구간, 1·2번 괄호, rit.는 마디들을 끌어서 골라요.</span><span lang="en">Tap a bar to pick it, and the mark buttons appear. For a repeat, an ending or a rit. over several bars, drag across them.</span></li>
+          <li><span lang="ko">버튼을 누르면 표시가 붙어요. 이미 붙은 표시는 버튼이 밝게 보이고, 다시 누르면 바꾸거나 지울 수 있어요.</span><span lang="en">Tap a button to add that mark. A mark the bar already has shows lit; tap it again to change or remove it.</span></li>
+          <li><span lang="ko">연주 순서는 표시를 보고 앱이 계산해요. <span class="ic i-steps"></span> Play order에서 확인하세요.</span><span lang="en">The playing order follows from the marks. Check it under <span class="ic i-steps"></span> Play order.</span></li>
+        </ol>
+        <ol class="legend">
+          <li data-pin="1"><span class="n">1</span><span><span lang="ko">고른 마디</span><span lang="en">The picked bar</span></span></li>
+          <li data-pin="2"><span class="n">2</span><span><span lang="ko">연주 순서를 정하는 표시</span><span lang="en">Marks for the playing order</span></span></li>
+          <li data-pin="3"><span class="n">3</span><span><span lang="ko">시간을 정하는 표시</span><span lang="en">Marks for the timing</span></span></li>
+          <li data-pin="4"><span class="n">4</span><span><span lang="ko">악보 위의 표시: 연습 화면에도 같은 모양으로 보여요</span><span lang="en">Marks on the score, shown the same way in practice</span></span></li>
+          <li data-pin="5"><span class="n">5</span><span><span lang="ko">rit.: 여러 마디에 걸친 표시는 점선으로 이어져요</span><span lang="en">A rit.: a mark over several bars runs on in a dashed line</span></span></li>
+        </ol>
+        <dl class="marks" lang="ko">
+          <div><dt>|: :|</dt><dd>도돌이표. :|를 다시 누르면 몇 번 반복할지 바꿔요. 여러 마디를 끌어서 고르면 |: Repeat :|로 한 번에 넣어요.</dd></div>
+          <div><dt>1. 2.</dt><dd>괄호. 몇 번째에 연주하는지 정해요.</dd></div>
+          <div><dt>Segno · To Coda · Coda · D.S. · D.C. · Fine</dt><dd>D.S.나 D.C.로 돌아간 뒤의 반복은 관습대로 건너뛰고, 표시를 다시 눌러 바꿀 수 있어요.</dd></div>
+          <div><dt>Go to</dt><dd>표시로 나타낼 수 없는 순서: 이 마디 다음에 고른 마디로 가요.</dd></div>
+          <div><dt>Tempo · Meter</dt><dd>이 마디부터 템포나 박자가 바뀌어요. 템포를 따로 정하지 않은 박자 변화는 음표 빠르기를 그대로 둬요. 4/4 <span class="tempo-mark">♩ = 100</span>에서 6/8로 가면 8분음표가 분당 200이에요.</dd></div>
+          <div><dt>rit. · accel.</dt><dd>고른 마디들에서 박마다 조금씩 느려지거나 빨라져 마지막 박에 정한 %가 되고, 다음 마디부터는 원래 템포예요. 다시 누르면 %를 바꿔요.</dd></div>
+          <div><dt>Fermata</dt><dd>그 마디를 몇 박 더 끌어요(+1~+12). 메트로놈은 늘인 박도 쳐요.</dd></div>
+          <div><dt>Short bar</dt><dd>못갖춘마디. Pickup은 마디의 마지막 박들이고 마디 번호에 들어가지 않아요(첫 마디면 0번). Ends early는 처음 박들이라, 도돌이표 앞에서 Pickup과 짝을 이루는 마디에 써요. 카운트인은 Pickup 앞 박까지만 세요.</dd></div>
+        </dl>
+        <dl class="marks" lang="en">
+          <div><dt>|: :|</dt><dd>Repeat signs. Tap :| again to change how many times. Drag across several bars and |: Repeat :| puts in both at once.</dd></div>
+          <div><dt>1. 2.</dt><dd>Endings: which time through each is played.</dd></div>
+          <div><dt>Segno · To Coda · Coda · D.S. · D.C. · Fine</dt><dd>After a D.S. or D.C., repeats are skipped, as is the custom; tap the mark again to play them.</dd></div>
+          <div><dt>Go to</dt><dd>For an order the marks can't say: after this bar, go to the one you pick.</dd></div>
+          <div><dt>Tempo · Meter</dt><dd>From this bar on, a new tempo or meter. A meter change with no tempo of its own keeps the notes at the same speed: from 4/4 at <span class="tempo-mark">♩ = 100</span> to 6/8, eighths at 200.</dd></div>
+          <div><dt>rit. · accel.</dt><dd>Over the picked bars the tempo slows or speeds up a little each beat, reaching the percent you set on the last one; the bar after is back at tempo. Tap it again to change the percent.</dd></div>
+          <div><dt>Fermata</dt><dd>Holds the bar for more beats (+1 to +12). The metronome clicks the held beats too.</dd></div>
+          <div><dt>Short bar</dt><dd>A bar with fewer beats. A Pickup has the bar's last beats and isn't counted in the bar numbers (a first bar is bar 0). Ends early has its first beats: the bar before a repeat that pairs with a pickup. The count-in counts up to the pickup's beats.</dd></div>
+        </dl>
+        <ul class="tips">
+          <li><span class="ic i-info"></span><span><span lang="ko">곡을 시작할 때의 템포와 박자는 메트로놈 설정(악보 화면 아래 막대의 템포)에서 정하고, 곡 중간에 바뀌는 곳만 표시하세요. 거기서 박마다 정한 소리는 그 박자에만 쓰여요.</span><span lang="en">Set the tempo and meter the piece starts with in the metronome settings (the tempo in the viewer's bottom bar), and mark only where they change. The sound you set for each beat there is for that meter only.</span></span></li>
+          <li><span class="ic i-info"></span><span><span lang="ko">예전 방식(단계 목록)으로 만든 곡은 전처럼 재생돼요. Song Form을 열면 확인한 뒤 악보를 다시 읽어 새로 만듭니다.</span><span lang="en">A song set up with the old step list plays as before. Opening its Song Form asks first, then reads the score again and sets it up afresh.</span></span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="practice">
+    <div class="sec-head">
+      <p class="eyebrow">Practice → Auto page turn</p>
+      <h2><span lang="ko">연습 화면</span><span lang="en">The practice screen</span></h2>
+      <p class="sec-intro" lang="ko">Auto page turn으로 연습하는 화면이에요. 악보가 화면을 다 쓰고, 음악이 시작되면 위아래 막대가 잠시 뒤 사라져 악보만 남아요. 악보를 누르면 막대가 잠깐 다시 나타납니다.</p>
+      <p class="sec-intro" lang="en">This is Auto page turn. The score has the whole screen, and once the music starts the bars go away after a moment, leaving just the score; a tap on it brings them back for a while.</p>
+    </div>
+    <div class="feature">
+      <figure class="phone">
+        <div class="screen"><img src="media/practice-controls.webp" width="720" height="1520" loading="lazy" alt="연습 중 화면: 연주 중인 마디에 상자, 악보 위의 표시, 위에 닫기와 마디 표시, 메트로놈 버튼, 아래에 PAGE, BAR, BEAT, 템포 표시와 진행 바, Pause, Reset" data-alt-en="Practice in progress: a box on the bar being played, the marks on the score, Close and the bar-marking and metronome buttons at the top, and PAGE, BAR, BEAT and tempo, the seek bar, Pause and Reset at the bottom"></div>
+        <span class="pin" data-n="1" style="--x:50%;--y:61.4%">1</span>
+        <span class="pin" data-n="2" style="--x:52.8%;--y:22.1%">2</span>
+        <span class="pin" data-n="3" style="--x:63.5%;--y:18.2%">3</span>
+        <span class="pin" data-n="4" style="--x:80%;--y:3.5%">4</span>
+        <span class="pin" data-n="5" style="--x:92%;--y:3.5%">5</span>
+        <span class="pin" data-n="6" style="--x:43.1%;--y:85.2%">6</span>
+        <span class="pin" data-n="7" style="--x:37%;--y:89.7%">7</span>
+        <span class="pin" data-n="8" style="--x:36.1%;--y:96.2%">8</span>
+        <span class="pin" data-n="9" style="--x:8.1%;--y:3.5%">9</span>
+      </figure>
+      <div class="aside">
+        <ol class="legend">
+          <li data-pin="1"><span class="n">1</span><span><span lang="ko">악보를 누르면 막대가 다시 나타나요</span><span lang="en">Tap the score to bring the bars back</span></span></li>
+          <li data-pin="2"><span class="n">2</span><span><span lang="ko">지금 연주하는 마디: 박마다 왼쪽부터 채워져요</span><span lang="en">The bar being played: it fills from the left, a beat at a time</span></span></li>
+          <li data-pin="3"><span class="n">3</span><span><span lang="ko">Song Form 편집 화면에서 붙인 표시</span><span lang="en">Marks you added in the Song Form editor</span></span></li>
+          <li data-pin="4"><span class="n">4</span><span><span lang="ko">지금 마디 표시 켜기·끄기 (모든 곡에 같이 적용)</span><span lang="en">Marking the bar on or off (for every song)</span></span></li>
+          <li data-pin="5"><span class="n">5</span><span><span lang="ko">메트로놈 소리 켜기·끄기 (꺼도 페이지는 넘어가요)</span><span lang="en">Metronome clicks on or off (pages still turn)</span></span></li>
+          <li data-pin="6"><span class="n">6</span><span><span lang="ko">지금 위치: 페이지 · 마디 · 박 · 템포</span><span lang="en">Where you are: page, bar, beat, tempo</span></span></li>
+          <li data-pin="7"><span class="n">7</span><span><span lang="ko">진행 바: 멈춘 상태에서 끌어 원하는 마디로</span><span lang="en">Seek bar: while paused, drag to any bar</span></span></li>
+          <li data-pin="8"><span class="n">8</span><span><span lang="ko">Pause 일시정지 · Reset 처음으로</span><span lang="en">Pause · Reset to the start</span></span></li>
+          <li data-pin="9"><span class="n">9</span><span><span lang="ko">닫기: 악보 화면으로</span><span lang="en">Close: back to the viewer</span></span></li>
+        </ol>
+        <ul class="tips">
+          <li><span class="ic i-pencil"></span><span><span lang="ko">시작 전이나 멈췄을 때는 위에 <span class="ic i-pencil"></span> 필기, <span class="ic i-eye"></span> 필기 보기·숨기기 버튼이 나타나요.</span><span lang="en">Before you start or while paused, the top bar has the editor <span class="ic i-pencil"></span> and your notes on or off <span class="ic i-eye"></span>.</span></span></li>
+          <li><span class="ic i-info"></span><span><span lang="ko">가로로 놓은 태블릿에서는 두 페이지를 펼친 책처럼 나란히 보여 줘요. 연주가 옆 쪽으로 넘어간 뒤에 다 연주한 쪽만 새 페이지로 바뀌고, 지금 보고 있는 쪽은 움직이지 않아요.</span><span lang="en">On a tablet in landscape, two pages sit side by side like an open book. Once you've crossed to the other page, only the one you finished is replaced; the page you're reading never moves.</span></span></li>
+          <li><span class="ic i-info"></span><span><span lang="ko">BAR는 악보의 마디 번호예요. 못갖춘마디로 시작하는 곡은 첫 마디를 Pickup으로 표시하면 0번부터 세어 인쇄된 번호와 맞아요. rit. 중에는 템포 숫자가 줄어들고, 늘임표가 있는 마디에서는 몇 박 더 끄는지 보여요.</span><span lang="en">BAR is the score's bar number. If the piece starts with a pickup, mark the first bar as a Pickup and it counts from 0, matching the print. In a rit. the tempo number goes down, and a held bar shows how many beats it's held for.</span></span></li>
+          <li><span class="ic i-play"></span><span><span lang="ko">블루투스 페달로 시작하고 멈출 수 있어요. 세트리스트에서 연 곡은 끝나면 아래에 <b class="ui">Next: 다음 곡</b>이 나와요.</span><span lang="en">A Bluetooth pedal starts and pauses it. In a setlist, the end of a song brings <b class="ui">Next: the next song</b>.</span></span></li>
+          <li><span class="ic i-info"></span><span><span lang="ko">연습 화면에서는 악보를 확대하거나 손으로 넘기지 않아요. 다른 곳을 보려면 멈춘 뒤 진행 바를 끌고, 확대는 필기 화면에서 하세요. 태블릿에서는 연습이 진행되는 동안 화면 방향이 고정돼요.</span><span lang="en">Practice doesn't zoom or scroll by hand. To look elsewhere, pause and drag the seek bar; to zoom, open the editor. On tablets, the screen stays in one orientation while practice runs.</span></span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="notes">
+    <div class="sec-head">
+      <p class="eyebrow">Library → <span class="ic i-pencil"></span> / Edit</p>
+      <h2><span lang="ko">악보에 필기하기</span><span lang="en">Writing on your score</span></h2>
+      <p class="sec-intro" lang="ko">운지, 호흡, 셈여림을 악보 위에 적어 두세요. 원본 PDF는 바뀌지 않고, 적은 내용은 악보 화면과 연습 화면에도 그대로 보여요. 곡 목록의 <span class="ic i-pencil"></span>, 악보 화면의 <b class="ui">Edit</b>(휴대폰은 <span class="ic i-dots"></span> → <b class="ui">Edit Sheet</b>), 연습 화면의 <span class="ic i-pencil"></span>로 들어갑니다.</p>
+      <p class="sec-intro" lang="en">Mark fingerings, breaths and dynamics right on the page. Your original PDF stays untouched, and your notes show in the viewer and in practice too. Open the editor from the <span class="ic i-pencil"></span> in the song list, <b class="ui">Edit</b> in the viewer (on a phone, <span class="ic i-dots"></span> → <b class="ui">Edit Sheet</b>), or the <span class="ic i-pencil"></span> in practice.</p>
+    </div>
+    <div class="feature">
+      <figure class="phone">
+        <div class="screen"><img src="media/sheet-editor.webp" width="720" height="1520" loading="lazy" alt="필기 화면: 위에 Done, 페이지 이동, 되돌리기, 공유 버튼, 악보 위에 빨간 운지 번호와 p, 아래에 스탬프 줄과 도구, 색, 굵기" data-alt-en="Sheet editor: Done, page arrows, undo and share along the top; red fingerings and a p on the score; the row of stamps, tools, colors and thickness along the bottom"></div>
+        <span class="pin" data-n="1" style="--x:9.7%;--y:3.3%">1</span>
+        <span class="pin" data-n="2" style="--x:42.1%;--y:3.3%">2</span>
+        <span class="pin" data-n="3" style="--x:76.6%;--y:3.3%">3</span>
+        <span class="pin" data-n="4" style="--x:93.1%;--y:3.3%">4</span>
+        <span class="pin" data-n="5" style="--x:25.6%;--y:92.5%">5</span>
+        <span class="pin" data-n="6" style="--x:44%;--y:92.5%">6</span>
+        <span class="pin" data-n="7" style="--x:59.3%;--y:86.2%">7</span>
+        <span class="pin" data-n="8" style="--x:61.2%;--y:92.5%">8</span>
+        <span class="pin" data-n="9" style="--x:81%;--y:92.5%">9</span>
+      </figure>
+      <div class="aside">
+        <ol class="legend">
+          <li data-pin="1"><span class="n">1</span><span><span lang="ko">Done: 끝내기 (자동 저장)</span><span lang="en">Done (saved automatically)</span></span></li>
+          <li data-pin="2"><span class="n">2</span><span><span lang="ko">페이지 이동</span><span lang="en">Change page</span></span></li>
+          <li data-pin="3"><span class="n">3</span><span><span lang="ko">되돌리기 · 다시 실행</span><span lang="en">Undo · Redo</span></span></li>
+          <li data-pin="4"><span class="n">4</span><span><span lang="ko">필기가 들어간 PDF 공유 · 인쇄</span><span lang="en">Share or print the PDF with your notes</span></span></li>
+          <li data-pin="5"><span class="n">5</span><span><span lang="ko">펜 · 형광펜 · 지우개</span><span lang="en">Pen · Highlighter · Eraser</span></span></li>
+          <li data-pin="6"><span class="n">6</span><span><span lang="ko">텍스트</span><span lang="en">Text</span></span></li>
+          <li data-pin="7"><span class="n">7</span><span><span lang="ko">스탬프: 운지 번호, 셈여림, 임시표, 숨표 등을 한 번에</span><span lang="en">Stamps: fingerings, dynamics, accidentals, breath marks and more in one tap</span></span></li>
+          <li data-pin="8"><span class="n">8</span><span><span lang="ko">색</span><span lang="en">Color</span></span></li>
+          <li data-pin="9"><span class="n">9</span><span><span lang="ko">굵기</span><span lang="en">Thickness</span></span></li>
+        </ol>
+        <ul class="tips">
+          <li><span class="ic i-info"></span><span><span lang="ko">텍스트 도구를 고르면 스탬프 줄이 나와요. 스탬프를 고르고 악보를 누를 때마다 찍히고, <b class="ui">Type</b>을 고르면 글자를 직접 써요.</span><span lang="en">The Text tool brings up a row of stamps: pick one, and each tap on the score puts it down. <b class="ui">Type</b> is for writing your own.</span></span></li>
+          <li><span class="ic i-info"></span><span><span lang="ko">두 손가락으로 확대하고 움직여요.</span><span lang="en">Use two fingers to zoom and move around.</span></span></li>
+          <li><span class="ic i-info"></span><span><span lang="ko">마지막 도구 <b class="ui">Select</b>(올가미)로 필기를 둘러 그리거나 하나를 누르면 점선 상자로 골라져요. 상자를 끌어 옮기고, <b class="ui">Delete</b>로 지워요. 되돌리기로 둘 다 되돌릴 수 있어요.</span><span lang="en">The last tool, <b class="ui">Select</b> (the lasso), picks the notes you draw a loop round, or the one you tap, in a dashed box: drag the box to move them, or tap <b class="ui">Delete</b>. Undo takes either back.</span></span></li>
+          <li><span class="ic i-pencil"></span><span><span lang="ko">Apple Pencil이나 S펜이 악보에 닿으면 <b class="ui">Pencil only</b>가 켜져요. 펜으로만 쓰고 손가락으로는 페이지를 넘기거나 옮기니, 손을 화면에 대고 써도 돼요. 버튼으로 끄면 손가락으로도 써요.</span><span lang="en">When an Apple Pencil or S Pen touches the page, <b class="ui">Pencil only</b> turns on: the pen writes and your finger turns or moves the page, so your hand can rest on the screen. Its button turns it off, and then a finger writes too.</span></span></li>
+        </ul>
+        <figure class="phone" style="max-width: 220px">
+          <div class="screen">
+            <video class="clip" muted loop playsinline preload="metadata" width="540" height="910" poster="media/clip-editor.webp">
+              <source src="media/clip-editor.mp4" type="video/mp4">
+            </video>
+            <button type="button" class="clip-btn"><span class="ic i-pause"></span></button>
+          </div>
+          <figcaption><span lang="ko">펜으로 표시하고 형광펜으로 강조하기</span><span lang="en">Circling with the pen, then highlighting</span></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="metronome">
+    <div class="sec-head">
+      <p class="eyebrow">Metronome</p>
+      <h2><span lang="ko">메트로놈과 튜너</span><span lang="en">The metronome and tuner</span></h2>
+      <p class="sec-intro" lang="ko">악보 없이 바로 쓰는 메트로놈이에요. 곡마다의 메트로놈은 악보 화면 아래 막대에서 열고, 곡마다 따로 저장돼요. 위의 <b class="ui">Tuner</b>를 누르면 튜너로 바뀝니다.</p>
+      <p class="sec-intro" lang="en">A metronome on its own. Each song has its own too, opened from the viewer's bottom bar and kept with the song. Tap <b class="ui">Tuner</b> at the top for a tuner.</p>
+    </div>
+    <div class="feature">
+      <figure class="phone">
+        <div class="screen"><img src="media/metronome.webp" width="720" height="1520" loading="lazy" alt="Metronome 탭: 위에 Metronome과 Tuner 전환, 박 표시, 템포 ♩ = 120, TAP, 박자표, 한 박 클릭 수, 소리, Start" data-alt-en="Metronome tab: the Metronome and Tuner switch at the top, beats, tempo ♩ = 120, TAP, time signature, clicks per beat, sound and Start"></div>
+        <span class="pin" data-n="1" style="--x:50%;--y:14.7%">1</span>
+        <span class="pin" data-n="2" style="--x:40.7%;--y:24.9%">2</span>
+        <span class="pin" data-n="3" style="--x:82%;--y:23.9%">3</span>
+        <span class="pin" data-n="4" style="--x:39.8%;--y:40.1%">4</span>
+        <span class="pin" data-n="5" style="--x:39.8%;--y:52.6%">5</span>
+        <span class="pin" data-n="6" style="--x:50%;--y:64.7%">6</span>
+        <span class="pin" data-n="7" style="--x:50%;--y:74.1%">7</span>
+        <span class="pin" data-n="8" style="--x:86.3%;--y:5.1%">8</span>
+      </figure>
+      <div class="aside">
+        <ol class="legend">
+          <li data-pin="1"><span class="n">1</span><span><span lang="ko">박 표시: 누를 때마다 보통 → 소리 없음 → 높은 소리 → 낮은 소리</span><span lang="en">Beats: tap to cycle normal → silent → high → low</span></span></li>
+          <li data-pin="2"><span class="n">2</span><span><span lang="ko">템포: 누르면 숫자와 기준 음표(♩, ♩., ♪ …)를 골라요</span><span lang="en">Tempo: tap to pick the number and the note it counts (♩, ♩., ♪ …)</span></span></li>
+          <li data-pin="3"><span class="n">3</span><span><span lang="ko">TAP: 박자에 맞춰 두드리면 템포가 입력돼요</span><span lang="en">TAP: tap along to set the tempo</span></span></li>
+          <li data-pin="4"><span class="n">4</span><span><span lang="ko">박자표 · <span class="ic i-dots"></span>에서 직접: 위·아래 숫자를 고르고, <b class="ui">Groups</b>에서 박을 눌러 3+2+2처럼 묶어요</span><span lang="en">Time signature · <span class="ic i-dots"></span> for your own: pick both numbers, then tap beats under <b class="ui">Groups</b> to group them, like 3+2+2</span></span></li>
+          <li data-pin="5"><span class="n">5</span><span><span lang="ko">한 박에 치는 횟수: 4분 · 8분 · 셋잇단 · 16분 · 셔플. 박자에 따라 선택지가 달라지고, 묶음이 있으면 묶음마다 한 번만 칠 수도 있어요</span><span lang="en">Clicks per beat: quarter, eighth, triplet, 16th, shuffle. The choices follow the meter, and a grouped meter adds one click per group</span></span></li>
+          <li data-pin="6"><span class="n">6</span><span><span lang="ko">소리: Click · Bell · Wood · Beep</span><span lang="en">Sound: Click, Bell, Wood, Beep</span></span></li>
+          <li data-pin="7"><span class="n">7</span><span><span lang="ko">시작 · 정지</span><span lang="en">Start and stop</span></span></li>
+          <li data-pin="8"><span class="n">8</span><span><span lang="ko">Tuner: 튜너로 바꾸기</span><span lang="en">Tuner: switch to the tuner</span></span></li>
+        </ol>
+        <div class="seq">
+          <p class="block-title" lang="ko">튜너</p>
+          <p class="block-title" lang="en">The tuner</p>
+          <ul class="checks">
+            <li class="inf"><span class="ic i-mic"></span><span><span lang="ko">악기를 연주하거나 노래하면 가장 가까운 음 이름과 몇 센트 높은지(♯) 낮은지(♭)가 보여요. ±5센트 안이면 맞은 음으로 표시돼요.</span><span lang="en">Play or sing a note: the nearest note shows, with how many cents sharp (♯) or flat (♭) it is. Within 5 cents it reads as in tune.</span></span></li>
+            <li class="inf"><span class="ic i-info"></span><span><span lang="ko">기준음 A는 415~466Hz 사이에서 바꿔요. 오케스트라는 흔히 442, 바로크 음높이는 415예요.</span><span lang="en">Move the A it tunes to anywhere from 415 to 466 Hz: 442 for many orchestras, 415 for baroque pitch.</span></span></li>
+            <li class="inf"><span class="ic i-info"></span><span><span lang="ko">튜너가 화면에 떠 있는 동안에만 마이크를 쓰고, 들은 소리는 저장하지 않아요.</span><span lang="en">It listens only while the tuner is on screen, and keeps nothing it hears.</span></span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="more">
+    <div class="sec-head">
+      <p class="eyebrow" lang="ko">악보 화면 → <span class="ic i-dots"></span></p>
+      <p class="eyebrow" lang="en">The viewer → <span class="ic i-dots"></span></p>
+      <h2><span lang="ko">그 밖의 기능</span><span lang="en">More</span><span class="badge"><span lang="ko">새 기능</span><span lang="en">NEW</span></span></h2>
+      <p class="sec-intro" lang="ko">악보 화면의 <span class="ic i-dots"></span> 메뉴(태블릿은 일부가 위 막대에 바로)와 라이브러리에 있는 기능이에요.</p>
+      <p class="sec-intro" lang="en">What's in the viewer's <span class="ic i-dots"></span> menu (on a tablet, some of it right in the top bar) and around the Library.</p>
+    </div>
+    <div class="feature">
+      <figure class="phone">
+        <div class="screen"><img src="media/viewer-more.webp" width="720" height="915" loading="lazy" alt="악보 화면의 더 보기 메뉴: Edit Sheet, Song Form, Metronome, Add to Setlist, Add Play-Along Track, Pages" data-alt-en="The viewer's More menu: Edit Sheet, Song Form, Metronome, Add to Setlist, Add Play-Along Track and Pages"></div>
+        <span class="pin" data-n="1" style="--x:9.4%;--y:14.4%">1</span>
+        <span class="pin" data-n="2" style="--x:9.4%;--y:29.5%">2</span>
+        <span class="pin" data-n="3" style="--x:9.4%;--y:44.5%">3</span>
+        <span class="pin" data-n="4" style="--x:9.4%;--y:57.5%">4</span>
+        <span class="pin" data-n="5" style="--x:9.4%;--y:72.5%">5</span>
+        <span class="pin" data-n="6" style="--x:9.4%;--y:89.7%">6</span>
+      </figure>
+      <div class="aside">
+        <ol class="legend">
+          <li data-pin="1"><span class="n">1</span><span><span lang="ko">Edit Sheet: <a href="#notes">필기</a></span><span lang="en">Edit Sheet: <a href="#notes">write on it</a></span></span></li>
+          <li data-pin="2"><span class="n">2</span><span><span lang="ko">Song Form: <a href="#songform">마디와 도돌이표</a></span><span lang="en">Song Form: <a href="#songform">bars and repeats</a></span></span></li>
+          <li data-pin="3"><span class="n">3</span><span><span lang="ko">Metronome: 이 곡의 메트로놈</span><span lang="en">Metronome: this song's own</span></span></li>
+          <li data-pin="4"><span class="n">4</span><span><span lang="ko">Add to Setlist: <a href="#setlists">세트리스트</a>에 넣기</span><span lang="en">Add to Setlist: put it in a <a href="#setlists">setlist</a></span></span></li>
+          <li data-pin="5"><span class="n">5</span><span><span lang="ko">Add Play-Along Track: 음원에 맞춰 연습 (아래)</span><span lang="en">Add Play-Along Track: play along with a recording (below)</span></span></li>
+          <li data-pin="6"><span class="n">6</span><span><span lang="ko">Pages: 페이지 정리 (아래)</span><span lang="en">Pages: arrange the pages (below)</span></span></li>
+        </ol>
+        <ul class="tips">
+          <li><span class="ic i-info"></span><span><span lang="ko">여백 자르기는 <b class="ui">Settings</b>로 옮겼어요. 세트리스트에서 연 곡은 <b class="ui">Previous Song</b> · <b class="ui">Next Song</b>도 있어요.</span><span lang="en">Margin trimming has moved to <b class="ui">Settings</b>. A song opened from a setlist also has <b class="ui">Previous Song</b> and <b class="ui">Next Song</b>.</span></span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="feature">
+      <figure class="phone">
+        <div class="screen"><img src="media/pages.webp" width="720" height="1520" loading="lazy" alt="Pages 화면: 다섯 쪽의 작은 그림과 쪽마다 돌리기, 빼기 버튼과 손잡이, 아래에 Add Pages와 Make a Song, 위에 Save" data-alt-en="Pages: thumbnails of five pages, each with turn, take out and a handle, Add Pages and Make a Song at the bottom, and Save at the top"></div>
+        <span class="pin" data-n="1" style="--x:68.1%;--y:23.8%">1</span>
+        <span class="pin" data-n="2" style="--x:78.3%;--y:23.8%">2</span>
+        <span class="pin" data-n="3" style="--x:89.5%;--y:23.8%">3</span>
+        <span class="pin" data-n="4" style="--x:26.1%;--y:86.5%">4</span>
+        <span class="pin" data-n="5" style="--x:73.6%;--y:86.5%">5</span>
+        <span class="pin" data-n="6" style="--x:88.9%;--y:3.5%">6</span>
+      </figure>
+      <div class="aside">
+        <p class="block-title" lang="ko">Pages: 페이지 정리</p>
+        <p class="block-title" lang="en">Pages: arranging the pages</p>
+        <ol class="legend">
+          <li data-pin="1"><span class="n">1</span><span><span lang="ko">쪽 돌리기 (옆으로 스캔된 쪽)</span><span lang="en">Turn a page (one scanned sideways)</span></span></li>
+          <li data-pin="2"><span class="n">2</span><span><span lang="ko">쪽 빼기</span><span lang="en">Take a page out</span></span></li>
+          <li data-pin="3"><span class="n">3</span><span><span lang="ko">손잡이를 끌어 쪽 순서 바꾸기</span><span lang="en">Drag a handle to move a page</span></span></li>
+          <li data-pin="4"><span class="n">4</span><span><span lang="ko">Add Pages: 사진, 스캔, 다른 PDF의 쪽을 끝에 더하기</span><span lang="en">Add Pages: photos, a scan or another PDF's pages, at the end</span></span></li>
+          <li data-pin="5"><span class="n">5</span><span><span lang="ko">Make a Song: 고른 쪽들을 따로 떼어 새 곡으로 (책 한 권짜리 PDF에서 한 곡씩)</span><span lang="en">Make a Song: the pages you pick become a song of their own (one piece out of a whole book)</span></span></li>
+          <li data-pin="6"><span class="n">6</span><span><span lang="ko">Save: 바꾼 내용 저장</span><span lang="en">Save the changes</span></span></li>
+        </ol>
+        <ul class="tips">
+          <li><span class="ic i-info"></span><span><span lang="ko">필기와 Song Form은 쪽을 따라 옮겨지고 돌아가요. 돌린 쪽의 마디 위치는 Song Form 편집 화면에서 다시 맞춰 주세요.</span><span lang="en">Notes and the Song Form move and turn with their pages. Place a turned page's bars again in the Song Form editor.</span></span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <h3><span lang="ko">얼굴로 페이지 넘기기</span><span lang="en">Turning pages with your face</span></h3>
+        <p lang="ko"><b class="ui">Settings</b>의 <b class="ui">Turn Pages by Face</b>를 켜고 <b class="ui">Wink</b>(한쪽 눈 감기), <b class="ui">Lips</b>(입술을 한쪽으로), <b class="ui">Head</b>(고개 돌렸다 돌아오기) 중에 고르세요. 악보 화면에서 오른쪽은 다음, 왼쪽은 이전으로 넘어가요. <b class="ui">Head</b>는 연주하며 고개가 많이 움직이지 않는 악기에 맞아요. 피아노에서는 저절로 넘어갈 수 있어요. 잘 안 넘어가거나 저절로 넘어가면 <b class="ui">Adjust Sensitivity</b>에서 제스처를 해 보며 감도를 맞추세요.</p>
+        <p lang="en">Turn on <b class="ui">Turn Pages by Face</b> in <b class="ui">Settings</b> and pick <b class="ui">Wink</b> (one eye shut), <b class="ui">Lips</b> (pushed to one side) or <b class="ui">Head</b> (turned and back). In the viewer, to your right turns on and to your left turns back. <b class="ui">Head</b> suits instruments that keep your head still: at a piano it can turn pages by itself. If pages don't turn, or turn by themselves, try your gesture in <b class="ui">Adjust Sensitivity</b> and set how readily it turns them.</p>
+        <p lang="ko">앞면 카메라를 쓰므로 배터리를 더 씁니다. 카메라는 악보나 Adjust Sensitivity가 열려 있을 때만 켜지고, 오른쪽 위의 작은 점이 켜져 있음을 알려 줘요(얼굴이 보이면 놋쇠색). 화면을 잠그거나 다른 앱으로 가거나 5분 동안 얼굴이 보이지 않으면 저절로 꺼지고, 다시 켜야 해요. 켜지고 꺼질 때는 화면 가운데에 안내가 나오니 <b class="ui">OK</b>를 눌러 주세요. 카메라에 보이는 것은 저장하지 않고 기기 밖으로 보내지도 않아요.</p>
+        <p lang="en">It uses the front camera, and so more battery. The camera is only on while a sheet or Adjust Sensitivity is open, with a small dot on the sheet at the top right to say so (brass when it sees a face). Locking the screen, going to another app or five minutes with no face turns this off, and you turn it on again. A notice in the middle of the screen says when it has come on or gone off: tap <b class="ui">OK</b>. Nothing the camera sees is kept or leaves your device.</p>
+      </div>
+      <div class="card">
+        <h3><span lang="ko">음원에 맞춰 연습</span><span lang="en">Play along</span></h3>
+        <p lang="ko"><span class="ic i-dots"></span> → <b class="ui">Add Play-Along Track</b>에서 <b class="ui">Audio File</b>(파일 앱의 음원)이나 <b class="ui">From Recordings</b>(녹음 탭의 녹음)를 고르면 아래 막대에 플레이어가 생겨요. 음높이는 그대로 두고 0.9×, 0.75×, 0.5×로 느리게 듣고, A–B로 한 구간을 반복해요.</p>
+        <p lang="en"><span class="ic i-dots"></span> → <b class="ui">Add Play-Along Track</b>: an <b class="ui">Audio File</b> (from Files) or one <b class="ui">From Recordings</b> puts a player in the bottom bar. Slow it to 0.9×, 0.75× or 0.5× without changing the pitch, and loop a passage with A–B.</p>
+      </div>
+      <div class="card">
+        <h3><span lang="ko">다른 앱에서 PDF 열기</span><span lang="en">PDFs from other apps</span></h3>
+        <p lang="ko">파일, 메일, 브라우저에서 PDF를 공유하거나 열 앱으로 MusicTools를 고르면 라이브러리에 가져오고, 하나면 바로 열어 줘요. 악보를 읽는 것도 직접 가져올 때와 같아요.</p>
+        <p lang="en">Share a PDF from Files, Mail or a browser to MusicTools, or open it with MusicTools: it goes into the Library, read for its bars as any import is, and a single one opens.</p>
+      </div>
+      <div class="card">
+        <h3><span lang="ko">검색과 최근 곡</span><span lang="en">Search and recent songs</span></h3>
+        <p lang="ko">라이브러리 위의 검색창에 곡 이름 일부를 넣으면 폴더와 상관없이 찾아요. 그 아래 <b class="ui">Recent</b>에는 최근에 연 곡이 있어요.</p>
+        <p lang="en">Type part of a title into the search box at the top of the Library to find a song in any folder. <b class="ui">Recent</b> below it has the songs you opened last.</p>
+      </div>
+      <div class="card">
+        <h3><span lang="ko">여러 곡 정리와 공유</span><span lang="en">Several songs at once, and sharing</span></h3>
+        <p lang="ko">라이브러리 위의 <b class="ui">Select</b>를 누르고 곡을 고르세요. 폴더 줄의 체크는 그 폴더의 곡을 모두 골라요. 아래의 <b class="ui">Move</b>, <b class="ui">Add to Setlist</b>, <b class="ui">Delete</b>로 한꺼번에 옮기고, 세트리스트에 넣고, 지워요. 접어 둔 폴더는 앱을 다시 열어도 접혀 있어요.</p>
+        <p lang="en">Tap <b class="ui">Select</b> at the top of the Library and pick songs; the check on a folder's row picks every song in it. <b class="ui">Move</b>, <b class="ui">Add to Setlist</b> and <b class="ui">Delete</b> at the bottom do it to all of them at once. Folders you collapse stay collapsed the next time you open the app.</p>
+        <p lang="ko">곡 하나를 친구에게 보낼 때는 곡의 <span class="ic i-dots"></span> → <b class="ui">Share PDF</b>. 필기가 있으면 넣을지(<b class="ui">With Notes</b>) 뺄지(<b class="ui">Sheet Only</b>) 골라요. 되돌릴 수 없는 삭제는 지우기 전에 한 번 더 물어요.</p>
+        <p lang="en">To send one song to a friend, use its <span class="ic i-dots"></span> → <b class="ui">Share PDF</b>; with notes on it, choose <b class="ui">With Notes</b> or <b class="ui">Sheet Only</b>. Deleting anything that can't be undone asks first.</p>
+      </div>
+      <div class="card">
+        <h3><span lang="ko">백업과 복원</span><span lang="en">Backup and restore</span></h3>
+        <p lang="ko">라이브러리의 <span class="ic i-dots"></span> → <b class="ui">Back Up Library</b>는 악보, 필기, Song Form, 연습용 음원, 폴더, 세트리스트를 파일 하나로 만들어요. 파일 앱이나 드라이브에 저장해 두고, 새 기기에서 <b class="ui">Restore from Backup</b>으로 그 파일을 고르세요. 지금 있는 곡은 그대로 두고 백업의 곡을 더해요. 녹음은 들어가지 않으니 녹음 탭에서 따로 공유하세요.</p>
+        <p lang="en">The Library's <span class="ic i-dots"></span> → <b class="ui">Back Up Library</b> puts your scores, notes, Song Forms, play-along tracks, folders and setlists into one file. Keep it in Files or a drive, and on a new device choose it with <b class="ui">Restore from Backup</b>: the songs in it are added, and the ones already there stay. Recordings aren't in it; share those from the Recordings tab.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="recordings">
+    <div class="sec-head">
+      <p class="eyebrow">Recordings</p>
+      <h2><span lang="ko">연습 녹음</span><span lang="en">Recording your practice</span></h2>
+      <p class="sec-intro" lang="ko">녹음은 기기 안에만 저장되고, 이 탭에서는 녹음하는 동안에만 마이크를 사용해요.</p>
+      <p class="sec-intro" lang="en">Recordings are kept only on your device, and this tab uses the microphone only while you record.</p>
+    </div>
+    <div class="feature">
+      <figure class="phone">
+        <div class="screen"><img src="media/recordings.webp" width="720" height="1520" loading="lazy" alt="Recordings 탭: 녹음 목록, 펼쳐진 재생 화면, 빨간 녹음 버튼" data-alt-en="Recordings tab: the list, one recording open in its player, and the red record button"></div>
+        <span class="pin" data-n="1" style="--x:61.1%;--y:81.8%">1</span>
+        <span class="pin" data-n="2" style="--x:38.9%;--y:42.9%">2</span>
+        <span class="pin" data-n="3" style="--x:7.4%;--y:56.6%">3</span>
+        <span class="pin" data-n="4" style="--x:17.6%;--y:66.2%">4</span>
+        <span class="pin" data-n="5" style="--x:86.3%;--y:54.2%">5</span>
+        <span class="pin" data-n="6" style="--x:5.4%;--y:73.4%">6</span>
+        <span class="pin" data-n="7" style="--x:32.2%;--y:2.9%">7</span>
+      </figure>
+      <div class="aside">
+        <ol class="howto">
+          <li><span lang="ko">빨간 버튼을 누르면 녹음이 시작돼요. 처음 한 번은 마이크 사용을 허용해 주세요.</span><span lang="en">Tap the red button to start. Allow microphone access the first time.</span></li>
+          <li><span lang="ko"><b class="ui">Pause</b>로 잠시 멈추고 <b class="ui">Resume</b>으로 이어서 녹음해요. <b class="ui">Done</b>을 누르면 저장됩니다.</span><span lang="en"><b class="ui">Pause</b> and <b class="ui">Resume</b> as you like; <b class="ui">Done</b> saves the recording.</span></li>
+          <li><span lang="ko">녹음하는 동안 다른 탭으로 옮겨도 녹음은 계속돼요. 녹음 탭 아이콘이 빨갛게 바뀌니, 메트로놈을 켜거나 악보를 보면서 녹음할 수 있어요.</span><span lang="en">Recording keeps going when you switch tabs, and the Recordings tab icon turns red, so you can record along with the metronome or a score.</span></li>
+          <li><span lang="ko">화면이 잠기거나 다른 앱으로 가도 녹음과 재생이 이어져요(Android는 알림이 떠 있는 동안). 전화가 오거나 다른 앱이 소리를 내면 그때까지 저장하고 멈추고, <b class="ui">Resume</b>을 누르면 같은 녹음에 이어서 녹음합니다.</span><span lang="en">Recording and playback carry on with the screen locked or in another app (on Android, while their notification shows). If a call comes in or another app plays sound, what you have is saved and recording pauses; tap <b class="ui">Resume</b> to continue the same take.</span></li>
+        </ol>
+        <ol class="legend">
+          <li data-pin="1"><span class="n">1</span><span><span lang="ko">녹음 시작</span><span lang="en">Record</span></span></li>
+          <li data-pin="2"><span class="n">2</span><span><span lang="ko">녹음을 누르면 재생 화면이 펼쳐져요</span><span lang="en">Tap a recording to open its player</span></span></li>
+          <li data-pin="3"><span class="n">3</span><span><span lang="ko">파형: 누르거나 끌어서 원하는 위치로</span><span lang="en">Waveform: tap or drag to jump</span></span></li>
+          <li data-pin="4"><span class="n">4</span><span><span lang="ko">재생 속도 1× · 0.75× · 0.5×, 옆은 5초 뒤로·앞으로</span><span lang="en">Speed 1×, 0.75× or 0.5×, then 5-second skips</span></span></li>
+          <li data-pin="5"><span class="n">5</span><span><span lang="ko"><span class="ic i-star"></span> 즐겨찾기 · <span class="ic i-dots"></span> 이름 변경, 폴더 이동, 오디오 공유, 삭제</span><span lang="en"><span class="ic i-star"></span> Favorite · <span class="ic i-dots"></span> Rename, Move to Folder, Share Audio, Delete</span></span></li>
+          <li data-pin="6"><span class="n">6</span><span><span lang="ko">허밍을 MIDI로 바꾸기 (아래 참고). 이미 바꾼 녹음은 <b class="ui">View MIDI</b>로 보여요</span><span lang="en">Turn humming into MIDI (see below); once done, it reads <b class="ui">View MIDI</b></span></span></li>
+          <li data-pin="7"><span class="n">7</span><span><span lang="ko">폴더: 전체 · 즐겨찾기 · 최근 삭제 · 내 폴더</span><span lang="en">Folders: All, Favorites, Recently Deleted and your own</span></span></li>
+        </ol>
+        <ul class="tips">
+          <li><span class="ic i-info"></span><span><span lang="ko">재생 중에는 잠금 화면과 제어 센터(iPhone), 또는 알림(Android)에서 멈추고 15초씩 옮길 수 있어요.</span><span lang="en">While a recording plays, pause it or skip 15 seconds from the lock screen and Control Center (iPhone) or its notification (Android).</span></span></li>
+          <li><span class="ic i-info"></span><span><span lang="ko">녹음 중에 앱이 닫혀도(강제 종료, 오류, 배터리 방전) 다음에 녹음 탭을 열면 그때까지 녹음한 내용이 돌아와요.</span><span lang="en">If the app closes mid-recording (force quit, a crash, a flat battery), what was recorded comes back the next time you open the Recordings tab.</span></span></li>
+          <li><span class="ic i-info"></span><span><span lang="ko">이어폰을 빼거나 블루투스 연결이 끊기면 녹음 재생, 메트로놈, 연습이 멈춰요.</span><span lang="en">Unplugging headphones, or a Bluetooth headset dropping out, stops recording playback, the metronome and practice.</span></span></li>
+          <li><span class="ic i-info"></span><span><span lang="ko">지운 녹음은 <b class="ui">Recently Deleted</b>에 30일 동안 남아 있어 되살릴 수 있어요.</span><span lang="en">Deleted recordings stay in <b class="ui">Recently Deleted</b> for 30 days, so you can recover them.</span></span></li>
+          <li><span class="ic i-piano"></span><span><span lang="ko">MIDI로 바꾼 녹음은 제목 옆에 MIDI 표시가 붙어서 목록에서 바로 알아볼 수 있어요.</span><span lang="en">A recording you've turned into MIDI carries a MIDI badge beside its title, so you can spot it in the list.</span></span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="midi">
+    <div class="sec-head">
+      <p class="eyebrow">Recordings → Transcribe to MIDI</p>
+      <h2><span lang="ko">허밍을 MIDI로</span><span lang="en">Hum to MIDI</span><span class="badge exp"><span lang="ko">실험 기능</span><span lang="en">EXPERIMENTAL</span></span></h2>
+      <p class="sec-intro" lang="ko">떠오른 멜로디를 허밍으로 녹음하면 음을 찾아 MIDI 파일로 만들어 줍니다. 분석은 모두 기기 안에서 이뤄져요.</p>
+      <p class="sec-intro" lang="en">Hum a melody into a recording and MusicTools finds the notes and makes a MIDI file. It all runs on your device.</p>
+    </div>
+    <div class="feature">
+      <figure class="phone">
+        <div class="screen"><img src="media/transcription.webp" width="720" height="1520" loading="lazy" alt="채보 결과 화면: 피아노 롤에 찾은 음, High confidence, Recording과 Notes 재생 버튼, Export MIDI" data-alt-en="Transcription result: notes on a piano roll, High confidence, Recording and Notes play buttons, Export MIDI"></div>
+        <span class="pin" data-n="1" style="--x:18.9%;--y:23.2%">1</span>
+        <span class="pin" data-n="2" style="--x:63.9%;--y:13.4%">2</span>
+        <span class="pin" data-n="3" style="--x:40.6%;--y:69.5%">3</span>
+        <span class="pin" data-n="4" style="--x:85.7%;--y:68.7%">4</span>
+        <span class="pin" data-n="5" style="--x:10%;--y:78.8%">5</span>
+        <span class="pin" data-n="6" style="--x:85.6%;--y:3.6%">6</span>
+      </figure>
+      <div class="aside">
+        <ol class="howto">
+          <li><span lang="ko">녹음을 펼치고 <b class="ui">Transcribe to MIDI</b>를 누르세요.</span><span lang="en">Open a recording and tap <b class="ui">Transcribe to MIDI</b>.</span></li>
+          <li><span lang="ko">안내를 확인하고 <b class="ui p">Transcribe</b>를 누르면 음을 찾기 시작해요.</span><span lang="en">Read the tips, then tap <b class="ui p">Transcribe</b>.</span></li>
+          <li><span lang="ko"><b class="ui">Recording</b>(부른 소리)과 <b class="ui">Notes</b>(찾은 음)를 번갈아 들으며 비교해 보세요.</span><span lang="en">Play <b class="ui">Recording</b> (what you sang) and <b class="ui">Notes</b> (what was found) to compare.</span></li>
+          <li><span lang="ko"><b class="ui p">Export MIDI</b>로 내보내 DAW나 악보 프로그램에서 다듬으세요.</span><span lang="en"><b class="ui p">Export MIDI</b> and tidy it up in your DAW or notation app.</span></li>
+        </ol>
+        <ol class="legend">
+          <li data-pin="1"><span class="n">1</span><span><span lang="ko">찾은 음(막대)과 부른 음높이(선)</span><span lang="en">Notes found (bars) over the pitch you sang (line)</span></span></li>
+          <li data-pin="2"><span class="n">2</span><span><span lang="ko">신뢰도 · 음 개수 · 음역 · 음정 보정값</span><span lang="en">Confidence, note count, range and tuning offset</span></span></li>
+          <li data-pin="3"><span class="n">3</span><span><span lang="ko">부른 소리와 찾은 음 번갈아 듣기</span><span lang="en">Compare what you sang with the notes</span></span></li>
+          <li data-pin="4"><span class="n">4</span><span><span lang="ko">확대 · 축소</span><span lang="en">Zoom</span></span></li>
+          <li data-pin="5"><span class="n">5</span><span><span lang="ko">MIDI 파일 내보내기</span><span lang="en">Export the MIDI file</span></span></li>
+          <li data-pin="6"><span class="n">6</span><span><span lang="ko">사용 안내 다시 보기</span><span lang="en">See the tips again</span></span></li>
+        </ol>
+        <div class="seq">
+          <p class="block-title" lang="ko">잘 되는 녹음</p>
+          <p class="block-title" lang="en">What works</p>
+          <ul class="checks">
+            <li class="ok"><span class="ic i-check"></span><span><span lang="ko">한 사람이 한 음씩 허밍하거나 노래한 녹음</span><span lang="en">One voice, humming or singing one note at a time</span></span></li>
+            <li class="ok"><span class="ic i-check"></span><span><span lang="ko">마이크 가까이, 조용한 곳에서</span><span lang="en">Close to the mic, in a quiet room</span></span></li>
+            <li class="ok"><span class="ic i-check"></span><span><span lang="ko">낮은 목소리, 높은 목소리 모두 괜찮아요</span><span lang="en">Low and high voices both work</span></span></li>
+            <li class="no"><span class="ic i-close"></span><span><span lang="ko">화음, 악기, 반주, 휘파람, 말소리는 잘 안 돼요</span><span lang="en">Chords, instruments, backing music, whistling and speech won't transcribe well</span></span></li>
+            <li class="inf"><span class="ic i-info"></span><span><span lang="ko">리듬과 음정은 부른 그대로 기록돼요. 박자나 음계에 맞춰 고치지 않아요. MIDI는 120 BPM 기준이라 DAW에서 원래 녹음과 타이밍이 맞습니다.</span><span lang="en">Rhythm and pitch are kept as sung; nothing is quantized or snapped to a scale. The MIDI file is at 120 BPM, so it lines up with the recording in your DAW.</span></span></li>
+            <li class="inf"><span class="ic i-info"></span><span><span lang="ko">앞부분 5분까지 분석해요. 20분이 넘는 녹음은 변환할 수 없어요.</span><span lang="en">The first 5 minutes are analyzed; recordings over 20 minutes can't be transcribed.</span></span></li>
+            <li class="inf"><span class="ic i-flask"></span><span><span lang="ko">실험 기능이라 틀리거나 빠진 음이 있을 수 있어요. 결과는 스케치로 활용하세요.</span><span lang="en">It's experimental: expect some wrong or missing notes, and treat the result as a sketch.</span></span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="sec-head">
+      <h2><span lang="ko">자주 묻는 질문</span><span lang="en">FAQ</span></h2>
+    </div>
+    <dl class="faq" lang="ko">
+      <div><dt>연습을 시작했는데 페이지가 안 넘어가요.</dt><dd>Practice에서 Simple을 골랐다면 메트로놈만 켜지고 페이지는 직접 넘겨요. 화면 왼쪽·오른쪽을 누르거나 밀어서 넘기고, 저절로 넘어가게 하려면 Practice → Auto page turn을 고르세요.</dd></div>
+      <div><dt>종이 악보밖에 없어요.</dt><dd>Add Sheet → Photos로 찍어 둔 사진을 고르거나, Scan with Camera로 바로 스캔하세요. 사진은 오선을 따라 저절로 반듯하게 펴지니, 쪽 순서를 맞추고 Create를 누르면 곡이 만들어져요.</dd></div>
+      <div><dt>마디 수는 어떻게 세나요?</dt><dd>가져올 때 앱이 마디선을 읽어 둡니다. Song Form 편집 화면을 열면 악보 위에 마디 번호가 보이니, 다른 곳은 Bars 탭에서 고치세요.</dd></div>
+      <div><dt>자동으로 설정되지 않은 악보가 있어요.</dt><dd>기울어진 스캔본이나 그림자 진 사진, 여러 곡이 이어진 연습곡집이나 교재, 40쪽이 넘는 PDF는 읽지 않고 그대로 둡니다. 틀린 순서로 페이지가 넘어가는 것보다 낫기 때문이에요. 이런 곡은 Song Form 편집 화면을 열면 한 번 더 읽어 보고, 읽지 못한 줄은 Add line으로 넣거나 그 쪽의 마디 수만 넣으면 돼요. 여러 곡이 든 PDF는 Pages → Make a Song으로 한 곡씩 떼어 내세요.</dd></div>
+      <div><dt>자동으로 들어간 마디가 악보와 달라요.</dt><dd>Song Form 편집 화면의 Bars 탭에서 Add bar나 Remove bar로 고치세요. 못갖춘마디로 시작하는 곡은 Marks 탭에서 첫 마디를 Short bar의 Pickup으로 정하면 마디 번호가 악보와 맞아요.</dd></div>
+      <div><dt>도돌이표나 D.C.는 어떻게 하나요?</dt><dd>도돌이표와 1번·2번 괄호는 가져올 때 읽어 둡니다. D.C.·D.S.·코다는 Song Form 편집 화면의 Marks 탭에서 그 마디에 넣으면 연주 순서를 앱이 계산해요. D.C.나 D.S.로 돌아간 뒤의 반복은 관습대로 건너뛰고, 표시를 다시 눌러 바꿀 수 있어요.</dd></div>
+      <div><dt>악보에 ♩. = 60처럼 적혀 있어요.</dt><dd>템포를 누르고 Counted in에서 점4분음표를 고른 다음 60을 넣으세요. 6/8처럼 8분음표로 세는 박자에서도 악보에 적힌 그대로 넣을 수 있어요.</dd></div>
+      <div><dt>곡 중간에 템포나 박자가 바뀌어요. rit.도 되나요?</dt><dd>Song Form 편집 화면의 Marks 탭에서 그 마디를 고르고 Tempo나 Meter로 바꾸세요. rit.와 accel.는 마디들을 끌어서 고른 뒤 넣고, 다시 누르면 몇 %까지 바꿀지 고를 수 있어요. 메트로놈도 그대로 따라 쳐요.</dd></div>
+      <div><dt>못갖춘마디로 시작해요.</dt><dd>Marks 탭에서 첫 마디를 고르고 Short bar에서 Pickup과 박 수를 정하세요. 마디 번호가 악보와 맞고, 카운트인이 그 박 앞까지만 세요. 도돌이표 앞에서 짝을 이루는 짧은 마디는 Ends early로 박 수를 정해요.</dd></div>
+      <div><dt>특정 마디를 길게 끌고 싶어요.</dt><dd>Song Form 편집 화면의 Marks 탭에서 그 마디를 고르고 Fermata를 누르세요. 다시 누르면 몇 박 더 끌지 +1~+12에서 고를 수 있어요.</dd></div>
+      <div><dt>지금 마디 표시를 끄고 싶어요.</dt><dd>연습 화면 오른쪽 위, 메트로놈 버튼 옆의 버튼으로 끄고 켜요. 모든 곡에 같이 적용돼요.</dd></div>
+      <div><dt>연습할 곡 순서를 정해 두고 싶어요.</dt><dd>Library → Setlists에서 세트리스트를 만드세요. 마지막 쪽에서 넘기면 다음 곡으로 이어지고, Auto page turn은 곡이 끝나면 다음 곡으로 넘어가자고 안내해요.</dd></div>
+      <div><dt>페이지 넘김 페달을 쓸 수 있나요?</dt><dd>키보드처럼 연결되는 블루투스 페달이면 돼요. 악보 화면에서는 쪽을 넘기고, Auto page turn에서는 시작하고 멈춰요.</dd></div>
+      <div><dt>얼굴 제스처를 켜면 카메라에 찍힌 것은 어떻게 되나요?</dt><dd>저장하지 않고 기기 밖으로 보내지도 않아요. 눈과 입, 고개의 움직임을 숫자로 읽어 페이지를 넘기는 데만 쓰고 바로 버려요. 악보가 열려 있을 때만 켜지고, 배터리를 더 쓰므로 쓰지 않을 때는 꺼 두세요.</dd></div>
+      <div><dt>악보와 녹음은 어디에 저장되나요?</dt><dd>모두 이 기기 안에만 저장돼요. 계정이나 클라우드가 없어서 앱을 삭제하면 함께 지워집니다. 악보는 Library의 ⋯ → Back Up Library로 파일 하나에 백업해 두고, 녹음은 공유 기능으로 따로 보관하세요.</dd></div>
+      <div><dt>폰과 태블릿 중 어디가 좋나요?</dt><dd>둘 다 쓸 수 있지만, 악보는 큰 화면에서 보기 편해서 태블릿을 권장해요. 가로로 놓으면 두 쪽을 나란히 볼 수 있어요.</dd></div>
+    </dl>
+    <dl class="faq" lang="en">
+      <div><dt>I started practice but the pages don't turn.</dt><dd>Simple, under Practice, only starts the metronome: you turn the pages, with a tap on either side or a swipe. For pages that turn themselves, choose Practice → Auto page turn.</dd></div>
+      <div><dt>I only have a paper score.</dt><dd>Add Sheet → Photos takes pictures you've taken, and Scan with Camera scans it there and then. Each page is straightened by its staves on its own: put the pages in order and tap Create.</dd></div>
+      <div><dt>How do I count bars?</dt><dd>MusicTools reads the barlines when you import. Open the Song Form editor to see the bars numbered on the score, and fix any that are off in the Bars tab.</dd></div>
+      <div><dt>Why wasn't my score set up automatically?</dt><dd>Skewed scans and shadowy photos, books of exercises or several pieces in one PDF, and PDFs over 40 pages are left alone, because pages turning at the wrong moment would be worse. For those, open the Song Form editor: it reads the score once more, and you add any line it can't read with Add line, or just count a page's bars. Split a PDF of several pieces into songs with Pages → Make a Song.</dd></div>
+      <div><dt>The bars it found don't match my score.</dt><dd>Fix them in the Bars tab of the Song Form editor, with Add bar or Remove bar. If the piece starts with a pickup, make the first bar a Pickup under Short bar in the Marks tab, and the bar numbers match the printed ones.</dd></div>
+      <div><dt>What about repeats, D.C. or D.S.?</dt><dd>Repeat signs and 1st and 2nd endings are read when you import. Put D.C., D.S. and Coda on their bars in the Marks tab of the Song Form editor, and the playing order follows. After a D.C. or D.S., repeats are skipped, as is the custom; tap the mark again to change that.</dd></div>
+      <div><dt>My score says ♩. = 60.</dt><dd>Tap the tempo, choose the dotted quarter under Counted in, and enter 60. In meters counted in eighths, like 6/8, you can enter the marking just as it's printed.</dd></div>
+      <div><dt>The tempo or meter changes partway through. And a rit.?</dt><dd>Pick that bar in the Marks tab of the Song Form editor and use Tempo or Meter. For a rit. or accel., drag across its bars first; tap it again to choose how far it goes. The metronome follows along.</dd></div>
+      <div><dt>My piece starts with a pickup.</dt><dd>Pick the first bar in the Marks tab and set a Pickup and its beats under Short bar. The bar numbers then match the printed ones, and the count-in stops just before the pickup. Give the short bar before a repeat that pairs with it its beats with Ends early.</dd></div>
+      <div><dt>Can I hold a bar longer?</dt><dd>Pick it in the Marks tab of the Song Form editor and tap Fermata. Tap it again to choose how many beats more, from +1 to +12.</dd></div>
+      <div><dt>Can I turn off the bar marking?</dt><dd>Use the button beside the metronome's, at the top right of the practice screen. It applies to every song.</dd></div>
+      <div><dt>Can I keep the songs I practice in order?</dt><dd>Make a setlist under Library → Setlists. Turning past a song's last page opens the next, and Auto page turn offers the next song when one ends.</dd></div>
+      <div><dt>Does a page-turn pedal work?</dt><dd>Yes, a Bluetooth pedal that connects as a keyboard. It turns the pages in the viewer, and starts and pauses Auto page turn.</dd></div>
+      <div><dt>With face gestures on, what happens to what the camera sees?</dt><dd>It isn't kept and doesn't leave your device. The movement of your eyes, lips and head is read as numbers, used only to turn the page, and thrown away at once. The camera is only on while a sheet is open; it uses more battery, so turn gestures off when you aren't using them.</dd></div>
+      <div><dt>Where are my scores and recordings kept?</dt><dd>Only on this device. There's no account or cloud, so deleting the app deletes them too. Back your scores up to one file with the Library's ⋯ → Back Up Library, and use Share to keep copies of recordings elsewhere.</dd></div>
+      <div><dt>Phone or tablet?</dt><dd>Both work, but a tablet shows the score at a more comfortable size, and two pages side by side in landscape.</dd></div>
+    </dl>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <p><span lang="ko">화면은 Android 기준이고 iPhone과 iPad도 같은 구성입니다. 녹음과 허밍 → MIDI 그림은 이전 버전 화면이지만 지금도 같아요.</span><span lang="en">Screens are from Android; iPhone and iPad work the same way. The recording and hum-to-MIDI pictures are from an earlier version but still match.</span></p>
+    <p><span lang="ko">문의</span><span lang="en">Contact</span>: inyourcareallen@gmail.com</p>
+    <p><a href="../privacy/"><span lang="ko">개인정보처리방침</span><span lang="en">Privacy policy</span></a> · <a href="../">MusicTools</a> · inyourcare</p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var clipLabels = { ko: ['재생', '일시정지'], en: ['Play', 'Pause'] };
+    var clips = [];
+
+    function setLang(lang, save) {
+      root.classList.toggle('en', lang === 'en');
+      root.lang = lang;
+      document.querySelectorAll('.lang button').forEach(function (b) {
+        b.setAttribute('aria-pressed', String(b.getAttribute('data-lang') === lang));
+      });
+      document.querySelectorAll('img[data-alt-en]').forEach(function (img) {
+        if (!img.hasAttribute('data-alt-ko')) img.setAttribute('data-alt-ko', img.getAttribute('alt') || '');
+        img.setAttribute('alt', img.getAttribute(lang === 'en' ? 'data-alt-en' : 'data-alt-ko'));
+      });
+      clips.forEach(function (c) { c.sync(); });
+      if (save) { try { localStorage.setItem('mt-guide-lang', lang); } catch (e) {} }
+    }
+
+    document.querySelectorAll('.lang button').forEach(function (b) {
+      b.addEventListener('click', function () { setLang(b.getAttribute('data-lang'), true); });
+    });
+
+    // In-page links scroll within the page.
+    document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        var target = document.getElementById(a.getAttribute('href').slice(1));
+        if (!target) return;
+        e.preventDefault();
+        target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      });
+    });
+
+    // Hovering a legend line lifts its pin on the screenshot, and the other way round.
+    document.querySelectorAll('.step, .feature').forEach(function (group) {
+      group.querySelectorAll('.legend li[data-pin]').forEach(function (li) {
+        var pin = group.querySelector('.pin[data-n="' + li.getAttribute('data-pin') + '"]');
+        if (!pin) return;
+        function on() { pin.classList.add('on'); li.classList.add('on'); }
+        function off() { pin.classList.remove('on'); li.classList.remove('on'); }
+        [li, pin].forEach(function (el) {
+          el.addEventListener('mouseenter', on);
+          el.addEventListener('mouseleave', off);
+        });
+      });
+    });
+
+    // Clips play while on screen, unless the viewer paused them or prefers less motion.
+    document.querySelectorAll('video.clip').forEach(function (video) {
+      var figure = video.closest('figure');
+      var btn = figure && figure.querySelector('.clip-btn');
+      var icon = btn && btn.querySelector('.ic');
+      var clip = { userPaused: reduce, sync: sync };
+      function sync() {
+        if (!btn) return;
+        var lang = root.classList.contains('en') ? 'en' : 'ko';
+        var playing = !video.paused;
+        btn.setAttribute('aria-label', clipLabels[lang][playing ? 1 : 0]);
+        icon.className = 'ic ' + (playing ? 'i-pause' : 'i-play');
+      }
+      function play() { var p = video.play(); if (p && p.catch) p.catch(function () { sync(); }); }
+      video.addEventListener('play', sync);
+      video.addEventListener('pause', sync);
+      if (btn) {
+        btn.addEventListener('click', function () {
+          if (video.paused) { clip.userPaused = false; play(); }
+          else { clip.userPaused = true; video.pause(); }
+        });
+      }
+      clips.push(clip);
+      if (!reduce) {
+        if ('IntersectionObserver' in window) {
+          new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (clip.userPaused) return;
+              if (entry.isIntersecting) play(); else video.pause();
+            });
+          }, { threshold: 0.35 }).observe(video);
+        } else {
+          play();
+        }
+      }
+      sync();
+    });
+
+    setLang(root.classList.contains('en') ? 'en' : 'ko', false);
+  })();
+</script>
+</body>
+</html>

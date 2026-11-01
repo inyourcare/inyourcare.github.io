@@ -16,4 +16,16 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://inyourcare.github.io/musictools/"/>
     <xhtml:link rel="alternate" hreflang="ko" href="https://inyourcare.github.io/musictools/ko/"/>
   </url>
+  <url>
+    <loc>https://inyourcare.github.io/musictools/guide/</loc>
+    <lastmod>2026-11-01</lastmod>
+  </url>
+  <url>
+    <loc>https://inyourcare.github.io/musictools/privacy/</loc>
+    <lastmod>2026-11-01</lastmod>
+  </url>
+  <url>
+    <loc>https://inyourcare.github.io/musictools/android-test/</loc>
+    <lastmod>2026-11-01</lastmod>
+  </url>
 </urlset>
